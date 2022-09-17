@@ -6,3 +6,5 @@
 6) ECDH keys generation.
 7) GUID creation.
 8) File hash computing: MD5, SHAxxx.
+9) String conversion tool ("Text Wizard").
+10) Cryptographic library (managed and COM-available).
