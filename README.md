@@ -1,3 +1,5 @@
+.NET 6 cryptographic utility
+
 1) Attached and detached digital file signatures (CMS/PKCS#7): signing and verification.
 2) Self-signed certificates creation: RSA and ECDSA.
 3) AES: file encryption and decryption.
