@@ -1,0 +1,34 @@
+﻿    [ProgId("CryptLib.Functions")]
+    [ComVisible(true)]
+    [Guid("61F0194E-6F98-4F9C-9D16-AB32E8F3B878")]
+    [InterfaceType(ComInterfaceType.InterfaceIsIDispatch)]
+    public interface ICryptLib
+    {
+        [DispId(1)]
+        void SignFile(string fileToSign, string certFile, bool detachedSignature = false, string sigFile = "", string password = "");
+        
+        [DispId(2)]
+        void CreateCertificate(string certDir, string issuer, string sigAlg, string hashAlg, string passCert = "", int years = 1);
+        
+        [DispId(3)]
+        void VerifySignature(string fileToDecode, out string info);
+
+        [DispId(4)]
+        void RSAEncrypt(string fileToEncrypt, string certFile, string hashAlg);
+
+        [DispId(5)]
+        void RSADecrypt(string fileToDecrypt, string certFile, string hashAlg, string password = "");
+
+        [DispId(6)]
+        void AESEncrypt(string Base64key, string fileToEncrypt, out string Base64IV);
+
+        [DispId(7)]
+        void AESDecrypt(string Base64key, string Base64IV, string fileToDecrypt);
+
+        [DispId(8)]
+        string GenerateECDiffieHellmanKey(string pathToMyCert, string pathToOtherCert, string hasAlg, string password = "");
+
+        [DispId(9)]
+        void ConvertCertFormat(string certFile, string toWhat, string privateKey = "", string certPass = "");
+    }
+

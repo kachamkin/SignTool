@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Product Id="*" Name="Sign Tool" Language="1033" Version="1.0.0.0" Manufacturer="Andrey Kachamkin" UpgradeCode="8866b3ba-ccb3-4ffb-adec-bc0332814071">
+		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" Platform="x64" Keywords="Encryption, decryption. digital signing, certificates" Comments="Encryption, decryption. digital signing and certificates"/>
+		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+		<MediaTemplate EmbedCab="yes" />
+
+		<Feature Id="ProductFeature" Title="Sign Tool" Level="1" Display='expand' ConfigurableDirectory='INSTALLFOLDER'>
+			<Condition Level='1'>
+				<![CDATA[NOT Installed]]>
+			</Condition>
+			<ComponentGroupRef Id="ProductComponents" />
+		</Feature>
+		<Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
+		<Property Id="ARPPRODUCTICON" Value="SignTool.exe" />
+
+		<Icon Id="SignTool.exe" SourceFile='C:\Users\kacha\source\repos\SignTool\SignTool\bin\Release\net6.0-windows\publish\win-x64\SignTool.exe' />
+		<UIRef Id="WixUI_InstallDir" />
+		<WixVariable Id="WixUILicenseRtf" Value="C:\Users\kacha\source\repos\SignTool\SignTool\bin\Release\net6.0-windows\publish\win-x64\License.rtf" />
+		
+	</Product>
+
+	<Fragment>
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			
+			<Directory Id="ProgramFiles64Folder">
+				<Directory Id="DirManufacturer" Name="Andrey Kachamkin">
+					<Directory Id="INSTALLFOLDER" Name="Sign Tool" />
+				</Directory>
+			</Directory>
+			
+			<Directory Id="ProgramMenuFolder" Name="Programs">
+				<Directory Id="ProgramMenuDir" Name="Andrey Kachamkin">
+					
+				</Directory>
+			</Directory>
+
+			<Directory Id="DesktopFolder" Name="Desktop" />
+
+		</Directory>
+	</Fragment>
+	
+	<Fragment>
+		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+
+			<Component Id="ProgramMenuDir" Guid="3E832756-37D0-4917-82A5-F445FFBDD8E3" Win64="yes">
+				<RemoveFolder Id='ProgramMenuDir' Directory='ProgramMenuDir' On='uninstall' />
+				<RegistryValue Root='HKCU' Key='Software\[Manufacturer]\[ProductName]' Type='string' Value='' KeyPath='yes' />
+			</Component>
+			
+			<Component Id='MainExecutable' Guid='A0626960-795B-4E9A-9A60-6E62622D534A' Win64='yes'>
+				<File Id='CryptLib.comhost.dll' Name='CryptLib.comhost.dll' Source='C:\Users\kacha\source\repos\SignTool\SignTool\bin\Release\net6.0-windows\publish\win-x64\CryptLib.comhost.dll'>
+					<Class Id="C85D24AD-8DE0-4EA8-82F5-99525350B2EA" Context="InprocServer32" ThreadingModel="both">
+						<Interface Id="61F0194E-6F98-4F9C-9D16-AB32E8F3B878" Name="ICryptLib" />
+						<ProgId Id="CryptLib.Functions.1">
+							<ProgId Id="CryptLib.Functions" />
+						</ProgId>
+					</Class>
+				</File>
+				<File Id='CryptLib.dll' Name='CryptLib.dll' Source='C:\Users\kacha\source\repos\SignTool\SignTool\bin\Release\net6.0-windows\publish\win-x64\CryptLib.dll'/>
+				<File Id='CryptLib.runtimeconfig.json' Name='CryptLib.runtimeconfig.json' Source='C:\Users\kacha\source\repos\SignTool\SignTool\bin\Release\net6.0-windows\publish\win-x64\CryptLib.runtimeconfig.json'/>
+				<File Id='SignTool.deps.json' Name='SignTool.deps.json' Source='C:\Users\kacha\source\repos\SignTool\SignTool\bin\Release\net6.0-windows\publish\win-x64\SignTool.deps.json'/>
+				<File Id='SignTool.dll' Name='SignTool.dll' Source='C:\Users\kacha\source\repos\SignTool\SignTool\bin\Release\net6.0-windows\publish\win-x64\SignTool.dll'/>
+				<File Id='SignTool.exe' Name='SignTool.exe' Source='C:\Users\kacha\source\repos\SignTool\SignTool\bin\Release\net6.0-windows\publish\win-x64\SignTool.exe' KeyPath='yes'>
+					<Shortcut Id="desktopSignTool" Directory="DesktopFolder" Name="Sign Tool" WorkingDirectory='INSTALLFOLDER' Advertise="yes" Icon= "SignTool.exe"/>
+					<Shortcut Id="programMenuSignTool" Directory="ProgramMenuDir" Name="Sign Tool" WorkingDirectory='INSTALLFOLDER' Advertise="yes" Icon= "SignTool.exe"/>
+				</File>
+				<File Id='SignTool.runtimeconfig.json' Name='SignTool.runtimeconfig.json' Source='C:\Users\kacha\source\repos\SignTool\SignTool\bin\Release\net6.0-windows\publish\win-x64\SignTool.runtimeconfig.json'/>
+				<File Id='System.Security.Cryptography.Pkcs.dll' Name='System.Security.Cryptography.Pkcs.dll' Source='C:\Users\kacha\source\repos\SignTool\SignTool\bin\Release\net6.0-windows\publish\win-x64\System.Security.Cryptography.Pkcs.dll'/>
+			</Component>
+			
+		</ComponentGroup>
+	</Fragment>
+	
+</Wix>
