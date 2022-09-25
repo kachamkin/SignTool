@@ -19,6 +19,13 @@ BOOL APIENTRY DllMain( HMODULE hModule,
     return TRUE;
 }
 
+extern "C" __declspec(dllexport) void GetHRMessage(HRESULT hr, LPWSTR message)
+{
+	_com_error err(hr);
+	LPCWSTR em = err.ErrorMessage();
+	wcscpy_s(message, wcslen(em) + 1, em);
+}
+
 extern "C" __declspec(dllexport) HRESULT SignApp(BYTE* pbSigningCertContext, DWORD cbBytes, LPCWSTR packageFilePath, PCWSTR timestampUrl, BOOL isSigningAppx)
 {
 	HRESULT hr = S_OK;

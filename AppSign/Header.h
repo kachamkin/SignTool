@@ -3,6 +3,7 @@
 #include <Windows.h>
 #include <Unknwnbase.h>
 #include <wincrypt.h>
+#include <comdef.h>
 
 #define SIGNER_TIMESTAMP_AUTHENTICODE 1
 

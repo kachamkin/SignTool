@@ -55,8 +55,11 @@ namespace CryptLib
     [ProgId("CryptLib.Functions")]
     public class CryptLib : ICryptLib
     {
-        [DllImport("AppSign.dll")]
+        [DllImport("C:\\Users\\kacha\\source\\repos\\SignTool\\x64\\Debug\\AppSign.dll")]
         private static extern long SignApp(IntPtr bSigningCertContext, ulong cbCertEncoded, [MarshalAs(UnmanagedType.LPWStr)] string packageFilePath, [MarshalAs(UnmanagedType.LPWStr)] string timestampUrl, [MarshalAs(UnmanagedType.Bool)] bool isSigningAppx);
+
+        [DllImport("C:\\Users\\kacha\\source\\repos\\SignTool\\x64\\Debug\\AppSign.dll")]
+        private static extern void GetHRMessage(long hr, [MarshalAs(UnmanagedType.LPWStr)] StringBuilder message);
 
         public void SignApplication(string fileToSign, string certFile, string password = "", bool isAppX = false)
         {
@@ -76,7 +79,11 @@ namespace CryptLib
             Marshal.FreeCoTaskMem(bd);
 
             if (res != 0)
-                throw new Exception("Failed to sign package! HRESULT is " + res);
+            {
+                StringBuilder message = new(1024);
+                GetHRMessage(res, message);
+                throw new Exception("HRESULT is " + res + ":\r\n" + message);
+            }
         }
 
         public void SignFile(string fileToSign, string certFile, bool detachedSignature = false, string sigFile = "", string password = "")
