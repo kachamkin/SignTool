@@ -55,10 +55,10 @@ namespace CryptLib
     [ProgId("CryptLib.Functions")]
     public class CryptLib : ICryptLib
     {
-        [DllImport("C:\\Users\\kacha\\source\\repos\\SignTool\\x64\\Debug\\AppSign.dll")]
+        [DllImport("AppSign.dll")]
         private static extern long SignApp(IntPtr bSigningCertContext, ulong cbCertEncoded, [MarshalAs(UnmanagedType.LPWStr)] string packageFilePath, [MarshalAs(UnmanagedType.LPWStr)] string timestampUrl, [MarshalAs(UnmanagedType.Bool)] bool isSigningAppx);
 
-        [DllImport("C:\\Users\\kacha\\source\\repos\\SignTool\\x64\\Debug\\AppSign.dll")]
+        [DllImport("AppSign.dll")]
         private static extern void GetHRMessage(long hr, [MarshalAs(UnmanagedType.LPWStr)] StringBuilder message);
 
         public void SignApplication(string fileToSign, string certFile, string password = "", bool isAppX = false)
@@ -80,7 +80,7 @@ namespace CryptLib
 
             if (res != 0)
             {
-                StringBuilder message = new(1024);
+                StringBuilder message = new(2048);
                 GetHRMessage(res, message);
                 throw new Exception("HRESULT is " + res + ":\r\n" + message);
             }
