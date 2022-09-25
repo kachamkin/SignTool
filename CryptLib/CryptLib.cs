@@ -44,6 +44,9 @@ namespace CryptLib
 
         [DispId(10)]
         string ComputeFileHash(string fileToHash, string hashAlg, out long size);
+
+        [DispId(11)]
+        void SignApplication(string fileToSign, string certFile, string password = "", bool isAppX = false);
     }
 
     [ComVisible(true)]
@@ -52,6 +55,30 @@ namespace CryptLib
     [ProgId("CryptLib.Functions")]
     public class CryptLib : ICryptLib
     {
+        [DllImport("AppSign.dll")]
+        private static extern long SignApp(IntPtr bSigningCertContext, ulong cbCertEncoded, [MarshalAs(UnmanagedType.LPWStr)] string packageFilePath, [MarshalAs(UnmanagedType.LPWStr)] string timestampUrl, [MarshalAs(UnmanagedType.Bool)] bool isSigningAppx);
+
+        public void SignApplication(string fileToSign, string certFile, string password = "", bool isAppX = false)
+        {
+            if (!File.Exists(fileToSign))
+                throw new Exception("File to sign is not specified or does not exist!");
+            if (!File.Exists(certFile))
+                throw new Exception("Certificate file is not specified or does not exist!");
+
+            using X509Certificate2? cert = new(certFile, string.IsNullOrWhiteSpace(password) ? null : password, X509KeyStorageFlags.Exportable);
+            if (!cert.HasPrivateKey)
+                throw new Exception("Specified certificate has no private key!");
+
+            byte[] data = cert.Export(X509ContentType.Pfx);
+            IntPtr bd = Marshal.AllocCoTaskMem(data.Length);
+            Marshal.Copy(data, 0, bd, data.Length);
+            long res = SignApp(bd, (ulong)data.Length, fileToSign, "http://timestamp.sectigo.com", isAppX);
+            Marshal.FreeCoTaskMem(bd);
+
+            if (res != 0)
+                throw new Exception("Failed to sign package! HRESULT is " + res);
+        }
+
         public void SignFile(string fileToSign, string certFile, bool detachedSignature = false, string sigFile = "", string password = "")
         {
             if (!File.Exists(fileToSign))

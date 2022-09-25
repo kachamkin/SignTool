@@ -151,7 +151,10 @@
 
         [DispId(10)]
         string ComputeFileHash(string fileToHash, string hashAlg);
-}
-    }</value>
+
+        [DispId(11)]
+        void SignApplication(string fileToSign, string certFile, string password = "", bool isAppX = false);
+
+}</value>
   </data>
 </root>

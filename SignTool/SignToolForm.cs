@@ -1,4 +1,7 @@
 using System.Diagnostics;
+using System.Runtime.InteropServices;
+using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 using TextWizard;
 
 namespace SignTool
@@ -42,7 +45,6 @@ namespace SignTool
             {
                 MessageBox.Show("Couldn't sign specified file!\r\n" + ex.Message, "Sign Tool", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
         }
 
         private void buttonSig_Click(object sender, EventArgs e)
@@ -357,6 +359,38 @@ namespace SignTool
         private void createGUIDBut_Click(object sender, EventArgs e)
         {
             GUID.Text = "" + Guid.NewGuid();
+        }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+            using OpenFileDialog ofd = new();
+            ofd.Multiselect = false;
+            if (ofd.ShowDialog() == DialogResult.OK)
+                appFileToSign.Text = ofd.FileName;
+        }
+
+        private void button10_Click(object sender, EventArgs e)
+        {
+            using OpenFileDialog ofd = new();
+            ofd.Multiselect = false;
+            ofd.Filter = "Certificate files with private key (*.pfx)|*.pfx|All files (*.*)|*.*";
+            if (ofd.ShowDialog() == DialogResult.OK)
+                appCertFile.Text = ofd.FileName;
+        }
+
+        private async void appSign_Click(object sender, EventArgs e)
+        {
+            CheckForIllegalCrossThreadCalls = false;
+            try
+            {
+                await Task.Run(() => Crypt.SignApplication(appFileToSign.Text, appCertFile.Text, appPassword.Text, isAppX.Checked));
+                MessageBox.Show("File sccessfully signed!", "Sign Tool");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Couldn't sign specified file!\r\n" + ex.Message, "Sign Tool", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
         }
     }
 }

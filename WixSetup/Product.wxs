@@ -58,6 +58,7 @@
 					</Class>
 				</File>
 				<File Id='CryptLib.dll' Name='CryptLib.dll' Source='C:\Users\kacha\source\repos\SignTool\SignTool\bin\Release\net6.0-windows\publish\win-x64\CryptLib.dll'/>
+				<File Id='AppSign.dll' Name='AppSign.dll' Source='C:\Users\kacha\source\repos\SignTool\x64\Release\AppSign.dll'/>
 				<File Id='CryptLib.runtimeconfig.json' Name='CryptLib.runtimeconfig.json' Source='C:\Users\kacha\source\repos\SignTool\SignTool\bin\Release\net6.0-windows\publish\win-x64\CryptLib.runtimeconfig.json'/>
 				<File Id='SignTool.deps.json' Name='SignTool.deps.json' Source='C:\Users\kacha\source\repos\SignTool\SignTool\bin\Release\net6.0-windows\publish\win-x64\SignTool.deps.json'/>
 				<File Id='SignTool.dll' Name='SignTool.dll' Source='C:\Users\kacha\source\repos\SignTool\SignTool\bin\Release\net6.0-windows\publish\win-x64\SignTool.dll'/>

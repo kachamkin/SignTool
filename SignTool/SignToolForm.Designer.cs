@@ -99,6 +99,17 @@
             this.hashHashType = new System.Windows.Forms.ComboBox();
             this.fileToHash = new System.Windows.Forms.TextBox();
             this.button8 = new System.Windows.Forms.Button();
+            this.tabPage9 = new System.Windows.Forms.TabPage();
+            this.createGUIDBut = new System.Windows.Forms.Button();
+            this.GUID = new System.Windows.Forms.TextBox();
+            this.tabPage10 = new System.Windows.Forms.TabPage();
+            this.isAppX = new System.Windows.Forms.CheckBox();
+            this.appFileToSign = new System.Windows.Forms.TextBox();
+            this.button9 = new System.Windows.Forms.Button();
+            this.appCertFile = new System.Windows.Forms.TextBox();
+            this.button10 = new System.Windows.Forms.Button();
+            this.appPassword = new System.Windows.Forms.TextBox();
+            this.appSign = new System.Windows.Forms.Button();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.textWizardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -106,9 +117,6 @@
             this.registerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.unregisterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.descriptionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tabPage9 = new System.Windows.Forms.TabPage();
-            this.GUID = new System.Windows.Forms.TextBox();
-            this.createGUIDBut = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage3.SuspendLayout();
@@ -118,8 +126,9 @@
             this.tabPage6.SuspendLayout();
             this.tabPage7.SuspendLayout();
             this.tabPage8.SuspendLayout();
-            this.menuStrip1.SuspendLayout();
             this.tabPage9.SuspendLayout();
+            this.tabPage10.SuspendLayout();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // fileToSign
@@ -223,6 +232,7 @@
             this.tabControl1.Controls.Add(this.tabPage7);
             this.tabControl1.Controls.Add(this.tabPage8);
             this.tabControl1.Controls.Add(this.tabPage9);
+            this.tabControl1.Controls.Add(this.tabPage10);
             this.tabControl1.HotTrack = true;
             this.tabControl1.Location = new System.Drawing.Point(6, 25);
             this.tabControl1.Multiline = true;
@@ -942,6 +952,128 @@
             this.button8.UseVisualStyleBackColor = true;
             this.button8.Click += new System.EventHandler(this.button8_Click);
             // 
+            // tabPage9
+            // 
+            this.tabPage9.Controls.Add(this.createGUIDBut);
+            this.tabPage9.Controls.Add(this.GUID);
+            this.tabPage9.Location = new System.Drawing.Point(4, 64);
+            this.tabPage9.Name = "tabPage9";
+            this.tabPage9.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage9.Size = new System.Drawing.Size(563, 168);
+            this.tabPage9.TabIndex = 8;
+            this.tabPage9.Text = "Create GUID";
+            this.tabPage9.UseVisualStyleBackColor = true;
+            // 
+            // createGUIDBut
+            // 
+            this.createGUIDBut.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
+            this.createGUIDBut.FlatAppearance.BorderColor = System.Drawing.SystemColors.GradientActiveCaption;
+            this.createGUIDBut.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.createGUIDBut.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.createGUIDBut.Location = new System.Drawing.Point(2, 136);
+            this.createGUIDBut.Name = "createGUIDBut";
+            this.createGUIDBut.Size = new System.Drawing.Size(558, 28);
+            this.createGUIDBut.TabIndex = 21;
+            this.createGUIDBut.Text = "Create";
+            this.createGUIDBut.UseVisualStyleBackColor = false;
+            this.createGUIDBut.Click += new System.EventHandler(this.createGUIDBut_Click);
+            // 
+            // GUID
+            // 
+            this.GUID.Location = new System.Drawing.Point(0, 68);
+            this.GUID.Name = "GUID";
+            this.GUID.PlaceholderText = "GUID";
+            this.GUID.ReadOnly = true;
+            this.GUID.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.GUID.Size = new System.Drawing.Size(563, 23);
+            this.GUID.TabIndex = 8;
+            // 
+            // tabPage10
+            // 
+            this.tabPage10.Controls.Add(this.isAppX);
+            this.tabPage10.Controls.Add(this.appFileToSign);
+            this.tabPage10.Controls.Add(this.button9);
+            this.tabPage10.Controls.Add(this.appCertFile);
+            this.tabPage10.Controls.Add(this.button10);
+            this.tabPage10.Controls.Add(this.appPassword);
+            this.tabPage10.Controls.Add(this.appSign);
+            this.tabPage10.Location = new System.Drawing.Point(4, 64);
+            this.tabPage10.Name = "tabPage10";
+            this.tabPage10.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage10.Size = new System.Drawing.Size(563, 168);
+            this.tabPage10.TabIndex = 9;
+            this.tabPage10.Text = "Sign application";
+            this.tabPage10.UseVisualStyleBackColor = true;
+            // 
+            // isAppX
+            // 
+            this.isAppX.AutoSize = true;
+            this.isAppX.Location = new System.Drawing.Point(225, 107);
+            this.isAppX.Name = "isAppX";
+            this.isAppX.Size = new System.Drawing.Size(113, 19);
+            this.isAppX.TabIndex = 11;
+            this.isAppX.Text = "Package is AppX";
+            this.isAppX.UseVisualStyleBackColor = true;
+            // 
+            // appFileToSign
+            // 
+            this.appFileToSign.Location = new System.Drawing.Point(4, 13);
+            this.appFileToSign.Name = "appFileToSign";
+            this.appFileToSign.PlaceholderText = "File to sign";
+            this.appFileToSign.Size = new System.Drawing.Size(530, 23);
+            this.appFileToSign.TabIndex = 5;
+            // 
+            // button9
+            // 
+            this.button9.Location = new System.Drawing.Point(536, 12);
+            this.button9.Name = "button9";
+            this.button9.Size = new System.Drawing.Size(24, 24);
+            this.button9.TabIndex = 6;
+            this.button9.Text = "...";
+            this.button9.UseVisualStyleBackColor = true;
+            this.button9.Click += new System.EventHandler(this.button9_Click);
+            // 
+            // appCertFile
+            // 
+            this.appCertFile.Location = new System.Drawing.Point(4, 43);
+            this.appCertFile.Name = "appCertFile";
+            this.appCertFile.PlaceholderText = "Certificate file";
+            this.appCertFile.Size = new System.Drawing.Size(530, 23);
+            this.appCertFile.TabIndex = 7;
+            // 
+            // button10
+            // 
+            this.button10.Location = new System.Drawing.Point(536, 43);
+            this.button10.Name = "button10";
+            this.button10.Size = new System.Drawing.Size(24, 24);
+            this.button10.TabIndex = 8;
+            this.button10.Text = "...";
+            this.button10.UseVisualStyleBackColor = true;
+            this.button10.Click += new System.EventHandler(this.button10_Click);
+            // 
+            // appPassword
+            // 
+            this.appPassword.Location = new System.Drawing.Point(4, 73);
+            this.appPassword.Name = "appPassword";
+            this.appPassword.PlaceholderText = "Private key password (if any)";
+            this.appPassword.Size = new System.Drawing.Size(555, 23);
+            this.appPassword.TabIndex = 10;
+            this.appPassword.UseSystemPasswordChar = true;
+            // 
+            // appSign
+            // 
+            this.appSign.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
+            this.appSign.FlatAppearance.BorderColor = System.Drawing.SystemColors.GradientActiveCaption;
+            this.appSign.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.appSign.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.appSign.Location = new System.Drawing.Point(2, 135);
+            this.appSign.Name = "appSign";
+            this.appSign.Size = new System.Drawing.Size(558, 28);
+            this.appSign.TabIndex = 9;
+            this.appSign.Text = "Sign";
+            this.appSign.UseVisualStyleBackColor = false;
+            this.appSign.Click += new System.EventHandler(this.appSign_Click);
+            // 
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -1003,42 +1135,6 @@
             this.descriptionToolStripMenuItem.Text = "Description";
             this.descriptionToolStripMenuItem.Click += new System.EventHandler(this.descriptionToolStripMenuItem_Click);
             // 
-            // tabPage9
-            // 
-            this.tabPage9.Controls.Add(this.createGUIDBut);
-            this.tabPage9.Controls.Add(this.GUID);
-            this.tabPage9.Location = new System.Drawing.Point(4, 64);
-            this.tabPage9.Name = "tabPage9";
-            this.tabPage9.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage9.Size = new System.Drawing.Size(563, 168);
-            this.tabPage9.TabIndex = 8;
-            this.tabPage9.Text = "Create GUID";
-            this.tabPage9.UseVisualStyleBackColor = true;
-            // 
-            // GUID
-            // 
-            this.GUID.Location = new System.Drawing.Point(0, 68);
-            this.GUID.Name = "GUID";
-            this.GUID.PlaceholderText = "GUID";
-            this.GUID.ReadOnly = true;
-            this.GUID.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.GUID.Size = new System.Drawing.Size(563, 23);
-            this.GUID.TabIndex = 8;
-            // 
-            // createGUIDBut
-            // 
-            this.createGUIDBut.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
-            this.createGUIDBut.FlatAppearance.BorderColor = System.Drawing.SystemColors.GradientActiveCaption;
-            this.createGUIDBut.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.createGUIDBut.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.createGUIDBut.Location = new System.Drawing.Point(2, 136);
-            this.createGUIDBut.Name = "createGUIDBut";
-            this.createGUIDBut.Size = new System.Drawing.Size(558, 28);
-            this.createGUIDBut.TabIndex = 21;
-            this.createGUIDBut.Text = "Create";
-            this.createGUIDBut.UseVisualStyleBackColor = false;
-            this.createGUIDBut.Click += new System.EventHandler(this.createGUIDBut_Click);
-            // 
             // SignToolForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -1071,10 +1167,12 @@
             this.tabPage7.PerformLayout();
             this.tabPage8.ResumeLayout(false);
             this.tabPage8.PerformLayout();
-            this.menuStrip1.ResumeLayout(false);
-            this.menuStrip1.PerformLayout();
             this.tabPage9.ResumeLayout(false);
             this.tabPage9.PerformLayout();
+            this.tabPage10.ResumeLayout(false);
+            this.tabPage10.PerformLayout();
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1162,5 +1260,13 @@
         private TabPage tabPage9;
         private Button createGUIDBut;
         private TextBox GUID;
+        private TabPage tabPage10;
+        private CheckBox isAppX;
+        private TextBox appFileToSign;
+        private Button button9;
+        private TextBox appCertFile;
+        private Button button10;
+        private TextBox appPassword;
+        private Button appSign;
     }
 }
