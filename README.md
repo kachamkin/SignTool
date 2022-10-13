@@ -11,3 +11,4 @@
 9) String conversion tool ("Text Wizard").
 10) Cryptographic library (managed and COM-available).
 11) Applications signing (.exe, .dll, .msi etc.)
+12) Web application with all these functions: https://websigntool20221012190522.azurewebsites.net 
