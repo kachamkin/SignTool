@@ -282,7 +282,7 @@ namespace CryptLib
             if (!File.Exists(pathToMyCert) || !File.Exists(pathToOtherCert))
                 throw new Exception("Certificate file is not specified or does not exist!");
 
-            using X509Certificate2 myCert = new(pathToMyCert, string.IsNullOrWhiteSpace(password) ? null : password, X509KeyStorageFlags.Exportable);
+            using X509Certificate2 myCert = new(pathToMyCert, string.IsNullOrWhiteSpace(password) ? null : password, X509KeyStorageFlags.Exportable | X509KeyStorageFlags.MachineKeySet);
             if (!myCert.HasPrivateKey)
                 throw new Exception("Specified certificate has no private key!");
 
