@@ -44,4 +44,8 @@ app.MapControllerRoute(
     name: "convert",
     pattern: "{controller=ConvertController}/{action=Convert}/{id?}");
 
+app.MapControllerRoute(
+    name: "dh",
+    pattern: "{controller=DHController}/{action=Dh}/{id?}");
+
 app.Run();

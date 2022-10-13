@@ -29,9 +29,9 @@ namespace WebSignTool.Controllers
                     }
 
                     if (Output == "Hex")
-                        return Content(BitConverter.ToString(Convert.FromBase64String(new CryptLib.CryptLib().ComputeFileHash(certDir + "\\" + upFile.FileName, Method, out _))));
+                        return Content(BitConverter.ToString(Convert.FromBase64String(await Task<string>.Run(() => new CryptLib.CryptLib().ComputeFileHash(certDir + "\\" + upFile.FileName, Method, out _)))));
                     else
-                        return Content(new CryptLib.CryptLib().ComputeFileHash(certDir + "\\" + upFile.FileName, Method, out _));
+                        return Content(await Task<string>.Run(() => new CryptLib.CryptLib().ComputeFileHash(certDir + "\\" + upFile.FileName, Method, out _)));
                 }
                 catch (Exception ex)
                 {
