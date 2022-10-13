@@ -46,7 +46,7 @@ namespace WebSignTool.Controllers
                             zs.Write(buffer, 0, buffer.Length);
                             zs.Close();
                         }
-                        else if (Method == "To CRT")
+                        else if (Method == "To CER")
                         {
                             zs = zip.CreateEntry("Certificate.cer").Open();
                             buffer = System.IO.File.ReadAllBytes(certDir + "\\Certificate.cer");
