@@ -68,7 +68,7 @@ namespace CryptLib
             if (!File.Exists(certFile))
                 throw new Exception("Certificate file is not specified or does not exist!");
 
-            using X509Certificate2? cert = new(certFile, string.IsNullOrWhiteSpace(password) ? null : password, X509KeyStorageFlags.Exportable);
+            using X509Certificate2? cert = new(certFile, string.IsNullOrWhiteSpace(password) ? null : password, X509KeyStorageFlags.Exportable | X509KeyStorageFlags.MachineKeySet);
             if (!cert.HasPrivateKey)
                 throw new Exception("Specified certificate has no private key!");
 
@@ -82,7 +82,7 @@ namespace CryptLib
             {
                 StringBuilder message = new(2048);
                 GetHRMessage(res, message);
-                throw new Exception("HRESULT is " + res + ":\r\n" + message);
+                throw new Exception("HRESULT is 0x" + res.ToString("x") + ":\r\n" + message);
             }
         }
 

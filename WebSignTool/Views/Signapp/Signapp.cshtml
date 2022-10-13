@@ -1,0 +1,30 @@
+﻿@model SignappModel;
+
+@{
+    ViewData["Title"] = "Sign Tool";
+}
+@using (Html.BeginForm(null, null, FormMethod.Post, new { enctype="multipart/form-data"}))
+{
+    <div class="container">
+    <p>
+        @Html.LabelFor(m => m.upFile, "File to upload")
+        <input type="file" name="upFile">
+    </p>
+        <p>
+            @Html.LabelFor(m => m.Cert, "Certificate")
+            <input type="file" name="Cert">
+        </p>
+        <p>
+                @Html.LabelFor(m => m.Password)
+                @Html.PasswordFor(m => m.Password)
+        </p>
+        <p>
+            @Html.LabelFor(m => m.IsAppX, "AppX package")
+            @Html.CheckBoxFor(m => m.IsAppX)
+        </p>
+
+    <p>
+        <input type="submit" value="Sign" />
+    </p>
+    </div>
+}

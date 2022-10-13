@@ -38,4 +38,10 @@
     <ProjectReference Include="..\AppSign\AppSign.vcxproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="AppSign.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

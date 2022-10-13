@@ -1,0 +1,23 @@
+﻿@model FileHashModel;
+
+@{
+    ViewData["Title"] = "Sign Tool";
+}
+@using (Html.BeginForm(null, null, FormMethod.Post, new { enctype="multipart/form-data"}))
+{
+    <div class="container">
+    <p>
+        @Html.LabelFor(m => m.upFile, "File to upload")
+        <input type="file" name="upFile">
+    </p>
+    <p>
+        @Html.LabelFor(m => m.Method, "Hash method")
+        @Html.DropDownListFor(m => m.Method, new List<SelectListItem> { new SelectListItem{ Text = "MD5"}, new SelectListItem{ Text = "SHA1", Selected = true}, new SelectListItem{ Text = "SHA256"}, new SelectListItem{ Text = "SHA384"}, new SelectListItem{ Text = "SHA512"} })
+        @Html.LabelFor(m => m.Output, "Output format")
+        @Html.DropDownListFor(m => m.Output, new List<SelectListItem> { new SelectListItem{ Text = "Hex"}, new SelectListItem{ Text = "Base64", Selected = true} })
+    </p>
+    <p>
+        <input type="submit" value="Calculate" />
+    </p>
+    </div>
+}

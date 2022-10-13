@@ -1,0 +1,32 @@
+﻿@model CreatecertModel;
+
+@{
+    ViewData["Title"] = "Sign Tool";
+}
+@using (Html.BeginForm(true))
+{
+    <div class="container">
+    <p>
+        @Html.LabelFor(m => m.Issuer)
+        @Html.EditorFor(m => m.Issuer)
+    </p>
+    <p>
+        @Html.LabelFor(m => m.Password)
+        @Html.PasswordFor(m => m.Password)
+    </p>
+    <p>
+        @Html.LabelFor(m => m.AsymmetricAlgorithm, "Asymmetric algorithm")
+        @Html.DropDownListFor(m => m.AsymmetricAlgorithm, new List<SelectListItem> { new SelectListItem{ Text = "RSA1024"}, new SelectListItem{ Text = "RSA2048", Selected = true}, new SelectListItem{ Text = "RSA4096"}, new SelectListItem{ Text = "ECDSA"} })
+            &nbsp; &nbsp; &nbsp;
+        @Html.LabelFor(m => m.HashAlgorithm, "Hash algorithm")
+        @Html.DropDownListFor(m => m.HashAlgorithm, new List<SelectListItem> { new SelectListItem{ Text = "SHA256", Selected = true}, new SelectListItem{ Text = "SHA384"}, new SelectListItem{ Text = "SHA512"} })
+    </p>
+    <p>
+        @Html.LabelFor(m => m.Valid, "Valid, years")
+        @Html.EditorFor(m => m.Valid)
+    </p>
+    <p>
+        <input type="submit" value="Create" />
+    </p>
+    </div>
+}
