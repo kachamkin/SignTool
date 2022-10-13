@@ -153,7 +153,7 @@ namespace CryptLib
 
             info = "";
             string? dirName = Path.GetDirectoryName(certFile);
-            using X509Certificate2? cert = new(certFile, string.IsNullOrWhiteSpace(certPass) ? null : certPass, X509KeyStorageFlags.Exportable);
+            using X509Certificate2? cert = new(certFile, string.IsNullOrWhiteSpace(certPass) ? null : certPass, X509KeyStorageFlags.Exportable | X509KeyStorageFlags.MachineKeySet);
 
             switch (toWhat)
             {

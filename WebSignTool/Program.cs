@@ -40,4 +40,8 @@ app.MapControllerRoute(
     name: "signapp",
     pattern: "{controller=SignappController}/{action=Signapp}/{id?}");
 
+app.MapControllerRoute(
+    name: "convert",
+    pattern: "{controller=ConvertController}/{action=Convert}/{id?}");
+
 app.Run();

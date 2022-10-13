@@ -1,0 +1,29 @@
+﻿@model ConvertModel;
+
+@{
+    ViewData["Title"] = "Sign Tool";
+}
+@using (Html.BeginForm(null, null, FormMethod.Post, new { enctype="multipart/form-data"}))
+{
+    <div class="container">
+    <p>
+        @Html.LabelFor(m => m.Cert, "Certificate")
+        <input type="file" name="Cert">
+    </p>
+        <p>
+            @Html.LabelFor(m => m.PrivKey, "Private key, if any")
+            <input type="file" name="PrivKey">
+        </p>
+        <p>
+                @Html.LabelFor(m => m.Password)
+                @Html.PasswordFor(m => m.Password)
+        </p>
+        <p>
+        @Html.LabelFor(m => m.Method, "Format")
+        @Html.DropDownListFor(m => m.Method, new List<SelectListItem> { new SelectListItem{ Text = "To CER", Selected = true}, new SelectListItem{ Text = "To CRT"}, new SelectListItem{ Text = "To PFX"}, new SelectListItem{ Text = "PFX to PEM"}, new SelectListItem{ Text = "PEM to PFX"} })
+        </p>
+    <p>
+        <input type="submit" value="Convert" />
+    </p>
+    </div>
+}

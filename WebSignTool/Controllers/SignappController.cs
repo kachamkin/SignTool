@@ -18,6 +18,9 @@ namespace WebSignTool.Controllers
                 return Global.GetErrors(this);
             else
             {
+                if (Request.Form.Files.Count != 2)
+                    return Content("Invalid count of files received!");
+
                 try
                 {
                     string certDir = Global.GetCertDir();

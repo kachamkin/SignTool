@@ -22,7 +22,7 @@ namespace WebSignTool
 
         public static string GetCertDir()
         {
-            string certDir = Path.GetTempPath();
+            string certDir = Path.GetTempPath() + "WebSigTool";
             if (!Directory.Exists(certDir))
                 Directory.CreateDirectory(certDir);
 
