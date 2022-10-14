@@ -6,7 +6,7 @@ namespace WebSignTool.Controllers
 {
     public class FileHashController : Controller
     {
-        private Microsoft.Extensions.Hosting.IHostEnvironment env;
+        private readonly Microsoft.Extensions.Hosting.IHostEnvironment env;
         public FileHashController(Microsoft.Extensions.Hosting.IHostEnvironment _env)
         {
             env = _env;

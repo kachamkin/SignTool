@@ -7,7 +7,7 @@ namespace WebSignTool.Controllers
 {
     public class AESEncryptController : Controller
     {
-        private Microsoft.Extensions.Hosting.IHostEnvironment env;
+        private readonly Microsoft.Extensions.Hosting.IHostEnvironment env;
         public AESEncryptController(Microsoft.Extensions.Hosting.IHostEnvironment _env)
         {
             env = _env;

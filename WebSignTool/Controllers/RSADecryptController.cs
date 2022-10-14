@@ -6,7 +6,7 @@ namespace WebSignTool.Controllers
 {
     public class RSADecryptController : Controller
     {
-        private Microsoft.Extensions.Hosting.IHostEnvironment env;
+        private readonly Microsoft.Extensions.Hosting.IHostEnvironment env;
         public RSADecryptController(Microsoft.Extensions.Hosting.IHostEnvironment _env)
         {
             env = _env;

@@ -9,7 +9,7 @@ namespace WebSignTool.Controllers
 {
     public class CreatecertController : Controller
     {
-        private Microsoft.Extensions.Hosting.IHostEnvironment env;
+        private readonly Microsoft.Extensions.Hosting.IHostEnvironment env;
         public CreatecertController(Microsoft.Extensions.Hosting.IHostEnvironment _env)
         {
             env = _env;
