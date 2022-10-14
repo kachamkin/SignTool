@@ -48,4 +48,8 @@ app.MapControllerRoute(
     name: "dh",
     pattern: "{controller=DHController}/{action=Dh}/{id?}");
 
+app.MapControllerRoute(
+    name: "rsaencrypt",
+    pattern: "{controller=RSAEncryptController}/{action=RSAEncrypt}/{id?}");
+
 app.Run();
