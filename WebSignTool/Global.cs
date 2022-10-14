@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System;
+using System.IO.Compression;
 
 namespace WebSignTool
 {
@@ -27,6 +29,14 @@ namespace WebSignTool
                 Directory.CreateDirectory(certDir);
 
             return certDir;
+        }
+
+        public static void PackFile(ZipArchive zip, string dir, string file)
+        {
+            using Stream zs = zip.CreateEntry(file).Open();
+            byte[] buffer = System.IO.File.ReadAllBytes(dir + "\\" + file);
+            zs.Write(buffer, 0, buffer.Length);
+            zs.Close();
         }
     }
 }

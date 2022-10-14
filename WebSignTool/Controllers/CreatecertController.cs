@@ -35,17 +35,8 @@ namespace WebSignTool.Controllers
                     using MemoryStream ms = new();
                     using (ZipArchive zip = new(ms, ZipArchiveMode.Create))
                     {
-                        Stream zs = zip.CreateEntry(Issuer + ".pfx").Open();
-                        byte[] buffer = System.IO.File.ReadAllBytes(certDir + "\\" + Issuer + ".pfx");
-                        zs.Write(buffer, 0, buffer.Length);
-                        zs.Close();
-
-                        zs = zip.CreateEntry(Issuer + ".cer").Open();
-                        buffer = System.IO.File.ReadAllBytes(certDir + "\\" + Issuer + ".cer");
-                        zs.Write(buffer, 0, buffer.Length);
-                        zs.Close();
-
-                        zs.Dispose();
+                        Global.PackFile(zip, certDir, Issuer + ".pfx");
+                        Global.PackFile(zip, certDir, Issuer + ".cer");
                     }
 
                     return File(ms.ToArray(), "application/zip", "Certificates.zip");

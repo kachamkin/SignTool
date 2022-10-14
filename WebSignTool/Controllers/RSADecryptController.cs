@@ -42,12 +42,8 @@ namespace WebSignTool.Controllers
 
                     using MemoryStream ms = new();
                     using (ZipArchive zip = new(ms, ZipArchiveMode.Create))
-                    {
-                        using Stream zs = zip.CreateEntry(Request.Form.Files[0].FileName).Open();
-                        byte[] buffer = System.IO.File.ReadAllBytes(certDir + "\\" + Request.Form.Files[0].FileName);
-                        zs.Write(buffer, 0, buffer.Length);
-                        zs.Close();
-                    }
+                        
+                    Global.PackFile(zip, certDir, Request.Form.Files[0].FileName);
 
                     return File(ms.ToArray(), "application/zip", "Decrypted.zip");
 

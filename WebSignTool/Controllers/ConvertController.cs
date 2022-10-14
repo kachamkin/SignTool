@@ -43,45 +43,17 @@ namespace WebSignTool.Controllers
                     using MemoryStream ms = new();
                     using (ZipArchive zip = new(ms, ZipArchiveMode.Create))
                     {
-                        Stream zs;
-                        byte[] buffer;
                         if (Method == "To CRT")
-                        {
-                            zs = zip.CreateEntry("Certificate.crt").Open();
-                            buffer = System.IO.File.ReadAllBytes(certDir + "\\Certificate.crt");
-                            zs.Write(buffer, 0, buffer.Length);
-                            zs.Close();
-                        }
+                            Global.PackFile(zip, certDir, "Certificate.crt");
                         else if (Method == "To CER")
-                        {
-                            zs = zip.CreateEntry("Certificate.cer").Open();
-                            buffer = System.IO.File.ReadAllBytes(certDir + "\\Certificate.cer");
-                            zs.Write(buffer, 0, buffer.Length);
-                            zs.Close();
-                        }
+                            Global.PackFile(zip, certDir, "Certificate.cer");
                         else if (Method.EndsWith("PFX"))
-                        {
-                            zs = zip.CreateEntry("Certificate.pfx").Open();
-                            buffer = System.IO.File.ReadAllBytes(certDir + "\\Certificate.pfx");
-                            zs.Write(buffer, 0, buffer.Length);
-                            zs.Close();
-                        }
+                            Global.PackFile(zip, certDir, "Certificate.pfx");
                         else if (Method == "PFX to PEM")
                         {
-                            zs = zip.CreateEntry("Certificate.pem").Open();
-                            buffer = System.IO.File.ReadAllBytes(certDir + "\\Certificate.pem");
-                            zs.Write(buffer, 0, buffer.Length);
-                            zs.Close();
-
-                            zs = zip.CreateEntry("Public.pem").Open();
-                            buffer = System.IO.File.ReadAllBytes(certDir + "\\Public.pem");
-                            zs.Write(buffer, 0, buffer.Length);
-                            zs.Close();
-
-                            zs = zip.CreateEntry("Private.pem").Open();
-                            buffer = System.IO.File.ReadAllBytes(certDir + "\\Private.pem");
-                            zs.Write(buffer, 0, buffer.Length);
-                            zs.Close();
+                            Global.PackFile(zip, certDir, "Certificate.pem");
+                            Global.PackFile(zip, certDir, "Public.pem");
+                            Global.PackFile(zip, certDir, "Private.pem");
                         }
                     }
 
