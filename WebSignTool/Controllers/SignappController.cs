@@ -41,7 +41,7 @@ namespace WebSignTool.Controllers
                     await Task.Run(() => new CryptLib.CryptLib().SignApplication(certDir + "\\" + Request.Form.Files[0].FileName, certDir + "\\" + Request.Form.Files[1].FileName, Password ?? "", IsAppX));
 
                     using MemoryStream ms = new();
-                    using (ZipArchive zip = new(ms, ZipArchiveMode.Create))
+                    using ZipArchive zip = new(ms, ZipArchiveMode.Create);
                         
                     Global.PackFile(zip, certDir, Request.Form.Files[0].FileName);
 

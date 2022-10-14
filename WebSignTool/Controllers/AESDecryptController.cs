@@ -41,7 +41,7 @@ namespace WebSignTool.Controllers
                     await Task<string>.Run(() => new CryptLib.CryptLib().AESDecrypt(Output == "Hex" ? Convert.ToBase64String(Convert.FromHexString(Key.Replace("-", ""))) : Key, Output == "Hex" ? Convert.ToBase64String(Convert.FromHexString(IV.Replace("-", ""))) : IV, certDir + "\\" + Request.Form.Files[0].FileName));
 
                     using MemoryStream ms = new();
-                    using (ZipArchive zip = new(ms, ZipArchiveMode.Create))
+                    using ZipArchive zip = new(ms, ZipArchiveMode.Create);
                         
                     Global.PackFile(zip, certDir, Request.Form.Files[0].FileName);
 
