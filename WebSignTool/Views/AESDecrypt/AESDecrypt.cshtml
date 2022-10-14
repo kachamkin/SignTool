@@ -1,0 +1,29 @@
+﻿@model AESDecryptModel;
+
+@{
+    ViewData["Title"] = "Sign Tool";
+}
+@using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="container">
+        <p>
+        @Html.LabelFor(m => m.upFile, "File to decrypt")
+        <input type="file" name="upFile">
+        </p>
+        <p>
+            @Html.LabelFor(m => m.Key, "Key")
+            @Html.EditorFor(m => m.Key)
+        </p>
+        <p>
+            @Html.LabelFor(m => m.IV, "IV")
+            @Html.EditorFor(m => m.IV)
+        </p>
+        <p>
+        @Html.LabelFor(m => m.Output, "Key & IV format")
+        @Html.DropDownListFor(m => m.Output, new List<SelectListItem> { new SelectListItem{ Text = "Hex"}, new SelectListItem{ Text = "Base64", Selected = true} })
+        </p>
+    <p>
+        <input type="submit" value="Decrypt" />
+    </p>
+    </div>
+}

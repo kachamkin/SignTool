@@ -60,4 +60,8 @@ app.MapControllerRoute(
     name: "aesencrypt",
     pattern: "{controller=AESEncryptController}/{action=AESEncrypt}/{id?}");
 
+app.MapControllerRoute(
+    name: "aesdecrypt",
+    pattern: "{controller=AESDecryptController}/{action=AESDecrypt}/{id?}");
+
 app.Run();
