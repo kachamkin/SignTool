@@ -6,6 +6,12 @@ namespace WebSignTool.Controllers
 {
     public class ConvertController : Controller
     {
+        private Microsoft.Extensions.Hosting.IHostEnvironment env;
+        public ConvertController(Microsoft.Extensions.Hosting.IHostEnvironment _env)
+        {
+            env = _env;
+        }
+
         public IActionResult Convert()
         {
             return View(new ConvertModel());
@@ -83,7 +89,7 @@ namespace WebSignTool.Controllers
                 }
                 catch (Exception ex)
                 {
-                    return Content(ex.Message + "\n" + ex.Source + "\n" + ex.StackTrace);
+                    return Content(ex.Message + (env.IsDevelopment() ? "\n" + ex.Source + "\n" + ex.StackTrace : ""));
                 }
             }
         }

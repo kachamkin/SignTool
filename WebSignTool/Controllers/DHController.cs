@@ -7,6 +7,12 @@ namespace WebSignTool.Controllers
 {
     public class DHController : Controller
     {
+        private Microsoft.Extensions.Hosting.IHostEnvironment env;
+        public DHController(Microsoft.Extensions.Hosting.IHostEnvironment _env)
+        {
+            env = _env;
+        }
+
         public IActionResult Dh()
         {
             return View(new DHModel());
@@ -40,7 +46,7 @@ namespace WebSignTool.Controllers
                 }
                 catch (Exception ex)
                 {
-                    return Content(ex.Message + "\n" + ex.Source + "\n" + ex.StackTrace);
+                    return Content(ex.Message + (env.IsDevelopment() ? "\n" + ex.Source + "\n" + ex.StackTrace : ""));
                 }
             }
         }

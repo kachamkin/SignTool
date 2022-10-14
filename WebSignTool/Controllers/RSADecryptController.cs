@@ -6,6 +6,12 @@ namespace WebSignTool.Controllers
 {
     public class RSADecryptController : Controller
     {
+        private Microsoft.Extensions.Hosting.IHostEnvironment env;
+        public RSADecryptController(Microsoft.Extensions.Hosting.IHostEnvironment _env)
+        {
+            env = _env;
+        }
+
         public IActionResult RSADecrypt()
         {
             return View(new RSADecryptModel());
@@ -48,7 +54,7 @@ namespace WebSignTool.Controllers
                 }
                 catch (Exception ex)
                 {
-                    return Content(ex.Message + "\n" + ex.Source + "\n" + ex.StackTrace);
+                    return Content(ex.Message + (env.IsDevelopment() ? "\n" + ex.Source + "\n" + ex.StackTrace : ""));
                 }
             }
         }

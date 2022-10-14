@@ -6,6 +6,12 @@ namespace WebSignTool.Controllers
 {
     public class FileHashController : Controller
     {
+        private Microsoft.Extensions.Hosting.IHostEnvironment env;
+        public FileHashController(Microsoft.Extensions.Hosting.IHostEnvironment _env)
+        {
+            env = _env;
+        }
+
         public IActionResult FileHash()
         {
             return View(new FileHashModel());
@@ -35,7 +41,7 @@ namespace WebSignTool.Controllers
                 }
                 catch (Exception ex)
                 {
-                    return Content(ex.Message + "\n" + ex.Source + "\n" + ex.StackTrace);
+                    return Content(ex.Message + (env.IsDevelopment() ? "\n" + ex.Source + "\n" + ex.StackTrace : ""));
                 }
             }
         }

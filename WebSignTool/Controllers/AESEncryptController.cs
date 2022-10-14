@@ -1,30 +1,30 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.IO.Compression;
 using WebSignTool.Models;
 
 namespace WebSignTool.Controllers
 {
-    public class RSAEncryptController : Controller
+    public class AESEncryptController : Controller
     {
         private Microsoft.Extensions.Hosting.IHostEnvironment env;
-        public RSAEncryptController(Microsoft.Extensions.Hosting.IHostEnvironment _env)
+        public AESEncryptController(Microsoft.Extensions.Hosting.IHostEnvironment _env)
         {
             env = _env;
         }
-
-        public IActionResult RSAEncrypt()
+        public IActionResult AESEncrypt()
         {
-            return View(new RSAEncryptModel());
+            return View(new AESEncryptModel());
         }
 
         [HttpPost]
-        public async Task<IActionResult> RSAEncryptAsync(string Method)
+        public async Task<IActionResult> AESEncryptAsync(string Output, string Key)
         {
             if (!ModelState.IsValid)
                 return Global.GetErrors(this);
             else
             {
-                if (Request.Form.Files.Count < 2)
+                if (Request.Form.Files.Count != 1)
                     return Content("Invalid count of files received!");
 
                 try
@@ -38,19 +38,33 @@ namespace WebSignTool.Controllers
                         stream.Close();
                     }
 
-                    await Task<string>.Run(() => new CryptLib.CryptLib().RSAEncrypt(certDir + "\\" + Request.Form.Files[0].FileName, certDir + "\\" + Request.Form.Files[1].FileName, Method));
+                    string IV = "";
+                    await Task<string>.Run(() => new CryptLib.CryptLib().AESEncrypt(Output == "Hex" ? Convert.ToBase64String(Convert.FromHexString(Key.Replace("-", ""))) : Key, certDir + "\\" + Request.Form.Files[0].FileName, out IV));
+                    if (Output == "Hex")
+                        IV = BitConverter.ToString(Convert.FromBase64String(IV));
+
+                    System.IO.File.Create(certDir + "\\IV.Txt").Close();
+                    System.IO.File.WriteAllText(certDir + "\\IV.txt", IV);
 
                     using MemoryStream ms = new();
                     using (ZipArchive zip = new(ms, ZipArchiveMode.Create))
                     {
-                        using Stream zs = zip.CreateEntry(Request.Form.Files[0].FileName).Open();
+                        Stream zs;
+
+                        zs = zip.CreateEntry(Request.Form.Files[0].FileName).Open();
                         byte[] buffer = System.IO.File.ReadAllBytes(certDir + "\\" + Request.Form.Files[0].FileName);
                         zs.Write(buffer, 0, buffer.Length);
-                        zs.Close();
+                        zs?.Close();
+
+                        zs = zip.CreateEntry("IV.txt").Open();
+                        buffer = System.IO.File.ReadAllBytes(certDir + "\\IV.txt" );
+                        zs.Write(buffer, 0, buffer.Length);
+                        zs?.Close();
+
+                        zs?.Dispose();
                     }
 
                     return File(ms.ToArray(), "application/zip", "Encrypted.zip");
-
                 }
                 catch (Exception ex)
                 {

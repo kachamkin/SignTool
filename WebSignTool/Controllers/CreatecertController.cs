@@ -9,6 +9,12 @@ namespace WebSignTool.Controllers
 {
     public class CreatecertController : Controller
     {
+        private Microsoft.Extensions.Hosting.IHostEnvironment env;
+        public CreatecertController(Microsoft.Extensions.Hosting.IHostEnvironment _env)
+        {
+            env = _env;
+        }
+
         public IActionResult Createcert()
         {
             return View(new CreatecertModel());
@@ -46,7 +52,7 @@ namespace WebSignTool.Controllers
                 }
                 catch (Exception ex)
                 {
-                    return Content(ex.Message);
+                    return Content(ex.Message + (env.IsDevelopment() ? "\n" + ex.Source + "\n" + ex.StackTrace : ""));
                 }
             }
         }
