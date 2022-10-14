@@ -52,4 +52,8 @@ app.MapControllerRoute(
     name: "rsaencrypt",
     pattern: "{controller=RSAEncryptController}/{action=RSAEncrypt}/{id?}");
 
+app.MapControllerRoute(
+    name: "rsadecrypt",
+    pattern: "{controller=RSADecryptController}/{action=RSADecrypt}/{id?}");
+
 app.Run();
