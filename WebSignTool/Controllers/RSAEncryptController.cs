@@ -41,9 +41,8 @@ namespace WebSignTool.Controllers
                     await Task<string>.Run(() => new CryptLib.CryptLib().RSAEncrypt(certDir + "\\" + Request.Form.Files[0].FileName, certDir + "\\" + Request.Form.Files[1].FileName, Method));
 
                     using MemoryStream ms = new();
-                    using ZipArchive zip = new(ms, ZipArchiveMode.Create);
-                        
-                    Global.PackFile(zip, certDir, Request.Form.Files[0].FileName);
+                    using (ZipArchive zip = new(ms, ZipArchiveMode.Create))
+                        Global.PackFile(zip, certDir, Request.Form.Files[0].FileName);
 
                     return File(ms.ToArray(), "application/zip", "Encrypted.zip");
 
