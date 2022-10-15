@@ -66,6 +66,10 @@ app.MapControllerRoute(
 
 app.MapControllerRoute(
     name: "signfile",
-    pattern: "{controller=SignfileController}/{action=signfile}/{id?}");
+    pattern: "{controller=SignfileController}/{action=Signfile}/{id?}");
+
+app.MapControllerRoute(
+    name: "verify",
+    pattern: "{controller=VerifyController}/{action=Verify}/{id?}");
 
 app.Run();

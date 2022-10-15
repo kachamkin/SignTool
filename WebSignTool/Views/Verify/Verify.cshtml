@@ -1,0 +1,17 @@
+﻿@model VerifyModel;
+
+@{
+    ViewData["Title"] = "Sign Tool";
+}
+@using (Html.BeginForm(null, null, FormMethod.Post, new { enctype="multipart/form-data"}))
+{
+    <div class="container">
+    <p>
+        @Html.LabelFor(m => m.upFile, "File to upload")
+        <input type="file" name="upFile">
+    </p>
+    <p>
+        <input type="submit" value="Verify and decode" />
+    </p>
+    </div>
+}

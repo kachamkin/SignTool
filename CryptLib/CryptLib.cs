@@ -22,7 +22,7 @@ namespace CryptLib
         void CreateCertificate(string certDir, string issuer, string sigAlg, string hashAlg, string passCert = "", int years = 1);
         
         [DispId(3)]
-        void VerifySignature(string fileToDecode, out string info);
+        void VerifySignature(string fileToDecode, out string info, out int count);
 
         [DispId(4)]
         void RSAEncrypt(string fileToEncrypt, string certFile, string hashAlg);
@@ -251,7 +251,7 @@ namespace CryptLib
             }
         }
 
-        public void VerifySignature(string fileToDecode, out string info)
+        public void VerifySignature(string fileToDecode, out string info, out int count)
         {
             if (!File.Exists(fileToDecode))
                 throw new Exception("File to decode is not specified or does not exist!");
@@ -261,7 +261,8 @@ namespace CryptLib
             cms.CheckSignature(true);
             
             info = "";
-            for (int i = 0; i < cms.SignerInfos.Count; i++)
+            count = cms.SignerInfos.Count;
+            for (int i = 0; i < count; i++)
             {
                 using X509Certificate2? cert = cms.SignerInfos[i].Certificate;
                 
