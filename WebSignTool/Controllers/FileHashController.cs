@@ -24,7 +24,7 @@ namespace WebSignTool.Controllers
                 return Global.GetErrors(this);
             else
             {
-                if (Request.Form.Files.Count < 2)
+                if (Request.Form.Files.Count != 1)
                     return Content("Invalid count of files received!");
 
                 try
