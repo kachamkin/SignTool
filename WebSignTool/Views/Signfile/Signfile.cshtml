@@ -1,0 +1,30 @@
+﻿@model SignfileModel;
+
+@{
+    ViewData["Title"] = "Sign Tool";
+}
+@using (Html.BeginForm(null, null, FormMethod.Post, new { enctype="multipart/form-data"}))
+{
+    <div class="container">
+    <p>
+        @Html.LabelFor(m => m.upFile, "File to sign")
+        <input type="file" name="upFile">
+    </p>
+        <p>
+            @Html.LabelFor(m => m.Cert, "Certificate")
+            <input type="file" name="Cert">
+        </p>
+        <p>
+                @Html.LabelFor(m => m.Password)
+                @Html.PasswordFor(m => m.Password)
+        </p>
+        <p>
+            @Html.LabelFor(m => m.Detached, "Detached signature")
+            @Html.CheckBoxFor(m => m.Detached)
+        </p>
+
+    <p>
+        <input type="submit" value="Sign" />
+    </p>
+    </div>
+}

@@ -64,4 +64,8 @@ app.MapControllerRoute(
     name: "aesdecrypt",
     pattern: "{controller=AESDecryptController}/{action=AESDecrypt}/{id?}");
 
+app.MapControllerRoute(
+    name: "signfile",
+    pattern: "{controller=SignfileController}/{action=signfile}/{id?}");
+
 app.Run();
