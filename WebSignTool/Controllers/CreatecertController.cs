@@ -43,7 +43,7 @@ namespace WebSignTool.Controllers
                 }
                 catch (Exception ex)
                 {
-                    return Content(ex.Message + (env.IsDevelopment() ? "\n" + ex.Source + "\n" + ex.StackTrace : ""));
+                    return Content(Global.ErrorMessage(ex, env.IsDevelopment()));
                 }
             }
         }

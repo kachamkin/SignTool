@@ -30,13 +30,7 @@ namespace WebSignTool.Controllers
                 try
                 {
                     string certDir = Global.GetCertDir();
-
-                    foreach (IFormFile file in Request.Form.Files)
-                    {
-                        using FileStream stream = new(certDir + "\\" + file.FileName, FileMode.Create);
-                        await file.CopyToAsync(stream);
-                        stream.Close();
-                    }
+                    await Global.WriteFiles(Request.Form.Files, certDir);
 
                     await Task<string>.Run(() => new CryptLib.CryptLib().AESDecrypt(Output == "Hex" ? Convert.ToBase64String(Convert.FromHexString(Key.Replace("-", ""))) : Key, Output == "Hex" ? Convert.ToBase64String(Convert.FromHexString(IV.Replace("-", ""))) : IV, certDir + "\\" + Request.Form.Files[0].FileName));
 
@@ -48,7 +42,7 @@ namespace WebSignTool.Controllers
                 }
                 catch (Exception ex)
                 {
-                    return Content(ex.Message + (env.IsDevelopment() ? "\n" + ex.Source + "\n" + ex.StackTrace : ""));
+                    return Content(Global.ErrorMessage(ex, env.IsDevelopment()));
                 }
             }
         }

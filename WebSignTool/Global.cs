@@ -38,5 +38,20 @@ namespace WebSignTool
             zs.Write(buffer, 0, buffer.Length);
             zs.Close();
         }
+
+        public static string ErrorMessage(Exception ex, bool IsDevelopment)
+        {
+            return ex.Message + (IsDevelopment ? "\n" + ex.Source + "\n" + ex.StackTrace : "");
+        }
+
+        public static async Task WriteFiles(IFormFileCollection Files, string dir)
+        {
+            foreach (IFormFile file in Files)
+            {
+                using FileStream stream = new(dir + "\\" + file.FileName, FileMode.Create);
+                await file.CopyToAsync(stream);
+                stream.Close();
+            }
+        }
     }
 }

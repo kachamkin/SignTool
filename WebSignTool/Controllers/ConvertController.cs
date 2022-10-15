@@ -30,13 +30,7 @@ namespace WebSignTool.Controllers
                 try
                 {
                     string certDir = Global.GetCertDir();
-
-                    foreach (IFormFile file in Request.Form.Files)
-                    {
-                        using FileStream stream = new(certDir + "\\" + file.FileName, FileMode.Create);
-                        await file.CopyToAsync(stream);
-                        stream.Close();
-                    }
+                    await Global.WriteFiles(Request.Form.Files, certDir);
 
                     await Task.Run(() => new CryptLib.CryptLib().ConvertCertFormat(certDir + "\\" + Request.Form.Files[0].FileName, Method, out _, Request.Form.Files.Count > 1 ? certDir + "\\" + Request.Form.Files[1].FileName : "", Password ?? ""));
 
@@ -61,7 +55,7 @@ namespace WebSignTool.Controllers
                 }
                 catch (Exception ex)
                 {
-                    return Content(ex.Message + (env.IsDevelopment() ? "\n" + ex.Source + "\n" + ex.StackTrace : ""));
+                    return Content(Global.ErrorMessage(ex, env.IsDevelopment()));
                 }
             }
         }
