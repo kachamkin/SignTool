@@ -18,15 +18,18 @@ namespace WebSignTool
 
                 using StreamWriter bw = new(fs);
                 bw.Write(DateTime.Now + " ");
+                
                 string HostName = "";
+                IPAddress? ip = context.HttpContext.Connection.RemoteIpAddress;
                 try
                 {
-                    HostName = context.HttpContext.Connection.RemoteIpAddress == null ? "" : " (" + Dns.GetHostEntry(context.HttpContext.Connection.RemoteIpAddress).HostName + ")";
+                    HostName = ip == null ? "" : " (" + Dns.GetHostEntry(ip).HostName + ")";
                 }
                 catch (Exception ex)
                 {
                     HostName = " (" + ex.Message + ")";
                 }
+
                 bw.Write(context.HttpContext.Connection.RemoteIpAddress + HostName + " ");
                 bw.Write(context.HttpContext.Request.Path + "\r\n");
 
