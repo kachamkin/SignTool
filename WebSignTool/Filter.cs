@@ -13,7 +13,9 @@ namespace WebSignTool
 
                 string certDir = Global.GetCertDir();
 
-                using FileStream fs = new(certDir + "\\" + "log.txt", FileMode.OpenOrCreate);
+                System.IO.FileInfo fi = new(certDir + "\\" + "log.txt");
+
+                using FileStream fs = new(certDir + "\\" + "log.txt", fi.Exists && fi.Length > 1048576 ? FileMode.Create : FileMode.OpenOrCreate);
                 fs.Seek(0, SeekOrigin.End);
 
                 using StreamWriter bw = new(fs);
