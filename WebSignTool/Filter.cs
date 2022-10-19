@@ -10,11 +10,9 @@ namespace WebSignTool
 
             try
             {
-
                 string certDir = Global.GetCertDir();
 
-                System.IO.FileInfo fi = new(certDir + "\\" + "log.txt");
-
+                FileInfo fi = new(certDir + "\\" + "log.txt");
                 using FileStream fs = new(certDir + "\\" + "log.txt", fi.Exists && fi.Length > 1048576 ? FileMode.Create : FileMode.OpenOrCreate);
                 fs.Seek(0, SeekOrigin.End);
 
