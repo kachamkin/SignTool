@@ -14,7 +14,7 @@ namespace WebSignTool
                 using (StreamWriter bw = new(fs))
                 {
                     await bw.WriteAsync(DateTime.Now + " ");
-                    await bw.WriteAsync(context.HttpContext.Request.Host + " ");
+                    await bw.WriteAsync(context.HttpContext.Connection.RemoteIpAddress + " ");
                     await bw.WriteAsync(context.HttpContext.Request.Path + "\n");
                     bw.Close();
                 }
