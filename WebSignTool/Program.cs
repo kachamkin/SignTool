@@ -1,7 +1,10 @@
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(options =>
+{
+    options.Filters.Add(typeof(WebSignTool.LogFilter));
+});
 
 var app = builder.Build();
 
@@ -71,5 +74,9 @@ app.MapControllerRoute(
 app.MapControllerRoute(
     name: "verify",
     pattern: "{controller=VerifyController}/{action=Verify}/{id?}");
+
+app.MapControllerRoute(
+    name: "log",
+    pattern: "{controller=LogController}/{action=Log}/{id?}");
 
 app.Run();
