@@ -1,9 +1,14 @@
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using WebSignTool;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews(options =>
 {
     options.Filters.Add(typeof(WebSignTool.LogFilter));
+    
 });
 
 var app = builder.Build();
@@ -79,4 +84,4 @@ app.MapControllerRoute(
     name: "log",
     pattern: "{controller=LogController}/{action=Log}/{id?}");
 
-app.Run();
+app.Run(); 
