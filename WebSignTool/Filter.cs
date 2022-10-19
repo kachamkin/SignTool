@@ -30,7 +30,7 @@ namespace WebSignTool
                     HostName = " (" + ex.Message + ")";
                 }
 
-                bw.Write(context.HttpContext.Connection.RemoteIpAddress + HostName + " ");
+                bw.Write(ip + HostName + " ");
                 bw.Write(context.HttpContext.Request.Path + "\r\n");
 
                 bw.Close();
