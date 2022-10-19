@@ -46,7 +46,7 @@ namespace CryptLib
         string ComputeFileHash(string fileToHash, string hashAlg, out long size);
 
         [DispId(11)]
-        void SignApplication(string fileToSign, string certFile, string password = "", bool isAppX = false);
+        void SignApplication(string fileToSign, string certFile, string password = "", bool isAppX = false, string TimeStampURL = "");
     }
 
     [ComVisible(true)]
@@ -61,7 +61,7 @@ namespace CryptLib
         [DllImport("AppSign.dll")]
         private static extern void GetHRMessage(long hr, [MarshalAs(UnmanagedType.LPWStr)] StringBuilder message);
 
-        public void SignApplication(string fileToSign, string certFile, string password = "", bool isAppX = false)
+        public void SignApplication(string fileToSign, string certFile, string password = "", bool isAppX = false, string TimeStampURL = "")
         {
             if (!File.Exists(fileToSign))
                 throw new Exception("File to sign is not specified or does not exist!");
@@ -75,7 +75,7 @@ namespace CryptLib
             byte[] data = cert.Export(X509ContentType.Pfx);
             IntPtr bd = Marshal.AllocCoTaskMem(data.Length);
             Marshal.Copy(data, 0, bd, data.Length);
-            long res = SignApp(bd, (ulong)data.Length, fileToSign, "http://timestamp.sectigo.com", isAppX);
+            long res = SignApp(bd, (ulong)data.Length, fileToSign, string.IsNullOrWhiteSpace(TimeStampURL) ? "http://timestamp.sectigo.com" : TimeStampURL, isAppX);
             Marshal.FreeCoTaskMem(bd);
 
             if (res != 0)

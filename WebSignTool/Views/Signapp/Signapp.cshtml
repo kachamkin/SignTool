@@ -19,6 +19,11 @@
                 @Html.PasswordFor(m => m.Password)
         </p>
         <p>
+            @Html.LabelFor(m => m.TimeStampURL, "Time stamp server URL")
+            @Html.EditorFor(m => m.TimeStampURL)
+        </p>
+
+        <p>
             @Html.LabelFor(m => m.IsAppX, "AppX package")
             @Html.CheckBoxFor(m => m.IsAppX)
         </p>

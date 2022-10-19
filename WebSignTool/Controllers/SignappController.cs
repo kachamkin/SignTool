@@ -18,7 +18,7 @@ namespace WebSignTool.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SignappAsync(string? Password, bool IsAppX)
+        public async Task<IActionResult> SignappAsync(string? Password, bool IsAppX, string TimeStampURL)
         {
             if (!ModelState.IsValid)
                 return Global.GetErrors(this);
@@ -32,7 +32,7 @@ namespace WebSignTool.Controllers
                     string certDir = Global.GetCertDir();
                     await Global.WriteFiles(Request.Form.Files, certDir);
 
-                    await Task.Run(() => new CryptLib.CryptLib().SignApplication(certDir + "\\" + Request.Form.Files[0].FileName, certDir + "\\" + Request.Form.Files[1].FileName, Password ?? "", IsAppX));
+                    await Task.Run(() => new CryptLib.CryptLib().SignApplication(certDir + "\\" + Request.Form.Files[0].FileName, certDir + "\\" + Request.Form.Files[1].FileName, Password ?? "", IsAppX, TimeStampURL));
 
                     using MemoryStream ms = new();
                     using (ZipArchive zip = new(ms, ZipArchiveMode.Create))

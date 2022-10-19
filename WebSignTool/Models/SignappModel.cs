@@ -10,5 +10,7 @@ namespace WebSignTool.Models
         public IFormFile? Cert;
         public string Password = "";
         public bool IsAppX = false;
+        [Required]
+        public string TimeStampURL = "http://timestamp.sectigo.com";
     }
 }
