@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
-using System.Net;
 
 namespace WebSignTool
 {
@@ -7,20 +6,29 @@ namespace WebSignTool
     {
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-            string certDir = Global.GetCertDir();
 
-            using (FileStream fs = new(certDir + "\\" + "log.txt", FileMode.OpenOrCreate))
+            try
             {
-                fs.Seek(0, SeekOrigin.End);
-                using (StreamWriter bw = new(fs))
+
+                string certDir = Global.GetCertDir();
+
+                using (FileStream fs = new(certDir + "\\" + "log.txt", FileMode.OpenOrCreate))
                 {
-                    await bw.WriteAsync(DateTime.Now + " ");
-                    IPHostEntry? host = await Dns.GetHostEntryAsync(context.HttpContext.Connection.RemoteIpAddress);
-                    await bw.WriteAsync(context.HttpContext.Connection.RemoteIpAddress +  (host == null ? "" : " (" + host.HostName + ")") + " ");
-                    await bw.WriteAsync(context.HttpContext.Request.Path + "\n");
-                    bw.Close();
+                    fs.Seek(0, SeekOrigin.End);
+                    using (StreamWriter bw = new(fs))
+                    {
+                        bw.Write(DateTime.Now + " ");
+                        //IPHostEntry? host = context.HttpContext.Connection.RemoteIpAddress == null ? null : Dns.GetHostEntry(context.HttpContext.Connection.RemoteIpAddress);
+                        //bw.Write(context.HttpContext.Connection.RemoteIpAddress + (host == null ? "" : " (" + host.HostName + ")") + " ");
+                        bw.Write(context.HttpContext.Connection.RemoteIpAddress + " ");
+                        bw.Write(context.HttpContext.Request.Path + "\r\n");
+                        bw.Close();
+                    }
+                    fs.Close();
                 }
-                fs.Close();
+            }
+            catch
+            {
             }
 
             await next();
