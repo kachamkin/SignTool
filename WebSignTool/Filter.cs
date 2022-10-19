@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
+using System.Net;
 
 namespace WebSignTool
 {
@@ -14,7 +15,8 @@ namespace WebSignTool
                 using (StreamWriter bw = new(fs))
                 {
                     await bw.WriteAsync(DateTime.Now + " ");
-                    await bw.WriteAsync(context.HttpContext.Connection.RemoteIpAddress + " ");
+                    IPHostEntry? host = await Dns.GetHostEntryAsync(context.HttpContext.Connection.RemoteIpAddress);
+                    await bw.WriteAsync(context.HttpContext.Connection.RemoteIpAddress +  (host == null ? "" : " (" + host.HostName + ")") + " ");
                     await bw.WriteAsync(context.HttpContext.Request.Path + "\n");
                     bw.Close();
                 }
