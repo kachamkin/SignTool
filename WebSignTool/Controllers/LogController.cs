@@ -4,7 +4,7 @@ namespace WebSignTool.Controllers
 {
     public class LogController : Controller
     {
-        private Microsoft.Extensions.Hosting.IHostEnvironment env;
+        private readonly Microsoft.Extensions.Hosting.IHostEnvironment env;
         public LogController(Microsoft.Extensions.Hosting.IHostEnvironment _env)
         {
             env = _env;

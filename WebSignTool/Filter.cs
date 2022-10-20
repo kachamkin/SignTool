@@ -1,12 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.Extensions.Options;
 using System.Net;
 
 namespace WebSignTool
 {
     public class LogFilter : IAsyncActionFilter
     {
-        private IConfiguration Configuration;
+        private readonly IConfiguration Configuration;
         public LogFilter(IConfiguration _config)
         {
             Configuration = _config;
@@ -16,10 +15,10 @@ namespace WebSignTool
 
             try
             {
-                string certDir = Global.GetCertDir(); 
+                string LogName = Global.GetCertDir() + "\\" + "log.txt"; 
 
-                FileInfo fi = new(certDir + "\\" + "log.txt");
-                using FileStream fs = new(certDir + "\\" + "log.txt", fi.Exists && fi.Length > Configuration.GetSection("Options").GetValue<long>("MaxLogSize") ? FileMode.Create : FileMode.OpenOrCreate);
+                FileInfo fi = new(LogName);
+                using FileStream fs = new(LogName, fi.Exists && fi.Length > Configuration.GetSection("Options").GetValue<long>("MaxLogSize") ? FileMode.Create : FileMode.OpenOrCreate);
                 fs.Seek(0, SeekOrigin.End);
 
                 using StreamWriter bw = new(fs);
