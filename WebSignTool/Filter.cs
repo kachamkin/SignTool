@@ -22,7 +22,7 @@ namespace WebSignTool
                 fs.Seek(0, SeekOrigin.End);
 
                 using StreamWriter bw = new(fs);
-                bw.Write(DateTime.Now + " ");
+                bw.Write(DateTime.Now + "   ");
                 
                 string HostName = "";
                 IPAddress? ip = context.HttpContext.Connection.RemoteIpAddress;
@@ -35,7 +35,7 @@ namespace WebSignTool
                     HostName = " (" + ex.Message + ")";
                 }
 
-                bw.Write(ip + HostName + " ");
+                bw.Write(ip + HostName + "  ");
                 bw.Write(context.HttpContext.Request.Path + "\r\n");
 
                 bw.Close();
