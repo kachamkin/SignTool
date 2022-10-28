@@ -56,9 +56,9 @@ namespace WebSignTool
             }
         }
 
-        public static async void SendLogMessageByTelegram(string message, IConfiguration config)
+        public static void SendLogMessageByTelegram(string message, IConfiguration config)
         {
-            await new HttpClient().GetStringAsync(
+            new HttpClient().GetStringAsync(
                 "https://api.telegram.org/bot" + 
                 config.GetSection("Options").GetValue<string>("TelegramToken") + 
                 "/sendMessage?chat_id=" + 
