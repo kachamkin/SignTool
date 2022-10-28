@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.IO.Compression;
+using System.Net;
 
 namespace WebSignTool
 {
@@ -52,6 +54,17 @@ namespace WebSignTool
                 await file.CopyToAsync(stream);
                 stream.Close();
             }
+        }
+
+        public static async void SendLogMessageByTelegram(string message, IConfiguration config)
+        {
+            await new HttpClient().GetStringAsync(
+                "https://api.telegram.org/bot" + 
+                config.GetSection("Options").GetValue<string>("TelegramToken") + 
+                "/sendMessage?chat_id=" + 
+                config.GetSection("Options").GetValue<string>("TelegramId") + 
+                "&text=" + message
+                );
         }
     }
 }

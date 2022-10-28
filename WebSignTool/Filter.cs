@@ -19,6 +19,11 @@ namespace WebSignTool
 
             try
             {
+
+                string hostName = GetHostName(ip);
+
+                Global.SendLogMessageByTelegram("Host: " + ip + hostName + "\nPath: " + context.HttpContext.Request.Path + "\nClient: " + context.HttpContext.Request.Headers["User-Agent"], Configuration);
+                
                 if (env.IsDevelopment())
                 {
                     new LogContext(Configuration).AddRecord(DateTime.Now, ip + GetHostName(ip), context.HttpContext.Request.Path);
@@ -34,7 +39,7 @@ namespace WebSignTool
                     using StreamWriter bw = new(fs);
                     bw.Write(DateTime.Now + "   ");
 
-                    bw.Write(ip + GetHostName(ip) + "  ");
+                    bw.Write(ip + hostName + "  ");
                     bw.Write(context.HttpContext.Request.Path + "\r\n");
 
                     bw.Close();
