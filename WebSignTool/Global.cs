@@ -58,13 +58,16 @@ namespace WebSignTool
 
         public static void SendLogMessageByTelegram(string message, IConfiguration config)
         {
-            new HttpClient().GetStringAsync(
-                "https://api.telegram.org/bot" + 
-                config.GetSection("Options").GetValue<string>("TelegramToken") + 
-                "/sendMessage?chat_id=" + 
-                config.GetSection("Options").GetValue<string>("TelegramId") + 
-                "&text=" + message
-                );
+            IConfigurationSection options = config.GetSection("Options");
+            
+            using HttpClient hc = new();
+            hc.GetStringAsync(
+                                "https://api.telegram.org/bot" +
+                                options.GetValue<string>("TelegramToken") +
+                                "/sendMessage?chat_id=" +
+                                options.GetValue<string>("TelegramId") +
+                                "&text=" + message
+                             );
         }
     }
 }
