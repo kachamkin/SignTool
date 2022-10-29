@@ -7,11 +7,13 @@ namespace WebSignTool
     {
         private readonly IConfiguration Configuration;
         private readonly IHostEnvironment env;
+        private readonly ITelegram telegram;
 
-        public LogFilter(IConfiguration _config, IHostEnvironment _env)
+        public LogFilter(IConfiguration _config, IHostEnvironment _env, ITelegram _telegram)
         {
             Configuration = _config;
             env = _env;
+            telegram = _telegram;
         }
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
@@ -22,7 +24,7 @@ namespace WebSignTool
 
                 string hostName = GetHostName(ip);
 
-                Global.SendLogMessageByTelegram("Host: " + ip + hostName + "\nPath: " + context.HttpContext.Request.Path + "\nClient: " + context.HttpContext.Request.Headers["User-Agent"], Configuration);
+                telegram.SendMessage("Host: " + ip + hostName + "\nPath: " + context.HttpContext.Request.Path + "\nClient: " + context.HttpContext.Request.Headers["User-Agent"]);
                 
                 if (env.IsDevelopment())
                 {

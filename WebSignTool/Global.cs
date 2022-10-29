@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.IO.Compression;
 using System.Net;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace WebSignTool
 {
@@ -56,18 +57,38 @@ namespace WebSignTool
             }
         }
 
-        public static void SendLogMessageByTelegram(string message, IConfiguration config)
+        public static void OnTelegramMessageReceived(string message, ITelegram telegram)
         {
-            IConfigurationSection options = config.GetSection("Options");
-            
-            using HttpClient hc = new();
-            hc.GetStringAsync(
-                                "https://api.telegram.org/bot" +
-                                options.GetValue<string>("TelegramToken") +
-                                "/sendMessage?chat_id=" +
-                                options.GetValue<string>("TelegramId") +
-                                "&text=" + message
-                             );
+            if (!string.IsNullOrEmpty(message))
+            {
+                telegram.SendMessage("Your message is: " + message);
+                try
+                {
+                    string certDir = Global.GetCertDir();
+                    System.IO.File.Open(certDir + "\\updateid.txt", FileMode.OpenOrCreate).Close();
+                    System.IO.File.WriteAllTextAsync(certDir + "\\updateid.txt", telegram.UpdateId.ToString());
+                }
+                catch { }
+
+            }
+        }
+
+        public static void AddTelegram(WebApplicationBuilder builder)
+        {
+            int updateId = 0;
+            try
+            {
+                string certDir = Global.GetCertDir();
+                System.IO.File.Open(certDir + "\\updateid.txt", FileMode.Open).Close();
+                updateId = int.Parse(System.IO.File.ReadAllText(certDir + "\\updateid.txt"));
+            }
+            catch { }
+
+            IConfigurationSection options = builder.Configuration.GetSection("Options");
+            Telegram telegram = new(options.GetValue<string>("TelegramToken"), options.GetValue<int>("TelegramId"), updateId);
+            telegram.OnMessageReceived += Global.OnTelegramMessageReceived;
+
+            builder.Services.AddSingleton<ITelegram>(telegram);
         }
     }
 }
