@@ -1,4 +1,5 @@
-﻿using static WebSignTool.Telegram;
+﻿using StackExchange.Redis;
+using static WebSignTool.Telegram;
 
 namespace WebSignTool
 {
@@ -7,6 +8,8 @@ namespace WebSignTool
         public event MessageReceived? OnMessageReceived;
         public void SendMessage(string message);
         public int UpdateId { get; }
+        public IConfiguration Configuration { get; }
+        public IRedis Redis { get; }
 
     }
 
@@ -58,12 +61,19 @@ namespace WebSignTool
         private int updateId;
         private readonly System.Timers.Timer timer;
         public int UpdateId { get { return updateId; } }
+        private readonly IConfiguration configuration;
+        public IConfiguration Configuration { get { return configuration; } }
+        private readonly IRedis redis;
+        public IRedis Redis { get { return redis; } }
 
-        public delegate void MessageReceived(string message, ITelegram telegram);
+        public delegate void MessageReceived(string message, ITelegram telegram, IConfiguration conf, IRedis redis);
         public event MessageReceived? OnMessageReceived;
 
-        public Telegram(string _botToken, int _chatId, int _updateId, uint _checkNewMessagesIntervalInSeconds = 1)
+        public Telegram(string _botToken, int _chatId, int _updateId, IConfiguration _config, IRedis _redis, uint _checkNewMessagesIntervalInSeconds = 1)
         {
+            configuration = _config;
+            redis = _redis;
+
             botToken = _botToken;  
             chatId = _chatId;
             updateId = _updateId;
@@ -82,10 +92,9 @@ namespace WebSignTool
 
         private async void TimerElapsed(object? sender, System.Timers.ElapsedEventArgs e)
         {
-            if (OnMessageReceived != null)
-            {
-                OnMessageReceived.Invoke(await GetLastMessage(), this);
-            }
+            string message = await GetLastMessage();
+            if (!string.IsNullOrEmpty(message))
+                OnMessageReceived?.Invoke(message, this, Configuration, redis);
         }
 
         public async void SendMessage(string message)
@@ -103,7 +112,6 @@ namespace WebSignTool
         private async Task<string> GetLastMessage()
         {
             using HttpClient hc = new();
-
             try
             {
                 LastMessage? lastMessage = await hc.GetFromJsonAsync<LastMessage>(

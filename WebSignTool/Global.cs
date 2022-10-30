@@ -1,10 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.Extensions.Configuration;
-using System;
 using System.IO.Compression;
-using System.Net;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace WebSignTool
 {
@@ -57,35 +53,46 @@ namespace WebSignTool
             }
         }
 
-        public static void OnTelegramMessageReceived(string message, ITelegram telegram)
+        public static void OnTelegramMessageReceived(string message, ITelegram telegram, IConfiguration config, IRedis redis)
         {
-            if (!string.IsNullOrEmpty(message))
+            telegram.SendMessage("Your message is: " + message);
+            try
             {
-                telegram.SendMessage("Your message is: " + message);
-                try
+                if (config.GetSection("Options").GetValue<string>("DataBaseType") == "Redis")
+                    redis.AddRecord("awaitid", telegram.UpdateId.ToString());
+                else
                 {
                     string certDir = Global.GetCertDir();
                     System.IO.File.Open(certDir + "\\updateid.txt", FileMode.OpenOrCreate).Close();
                     System.IO.File.WriteAllTextAsync(certDir + "\\updateid.txt", telegram.UpdateId.ToString());
                 }
-                catch { }
-
             }
+            catch { }
         }
 
-        public static void AddTelegram(WebApplicationBuilder builder)
+        public static void AddTelegram(WebApplicationBuilder builder, IRedis redis)
         {
+            IConfigurationSection options = builder.Configuration.GetSection("Options");
+
             int updateId = 0;
             try
             {
-                string certDir = Global.GetCertDir();
-                System.IO.File.Open(certDir + "\\updateid.txt", FileMode.Open).Close();
-                updateId = int.Parse(System.IO.File.ReadAllText(certDir + "\\updateid.txt"));
+                if (options.GetValue<string>("DataBaseType") == "Redis")
+                {
+                    string? uid = redis.GetRecord("updateid");
+                    if (uid != null)
+                        updateId = int.Parse(uid);
+                }
+                else
+                {
+                    string certDir = Global.GetCertDir();
+                    System.IO.File.Open(certDir + "\\updateid.txt", FileMode.Open).Close();
+                    updateId = int.Parse(System.IO.File.ReadAllText(certDir + "\\updateid.txt"));
+                }
             }
             catch { }
 
-            IConfigurationSection options = builder.Configuration.GetSection("Options");
-            Telegram telegram = new(options.GetValue<string>("TelegramToken"), options.GetValue<int>("TelegramId"), updateId);
+            Telegram telegram = new(options.GetValue<string>("TelegramToken"), options.GetValue<int>("TelegramId"), updateId, builder.Configuration, redis);
             telegram.OnMessageReceived += Global.OnTelegramMessageReceived;
 
             builder.Services.AddSingleton<ITelegram>(telegram);

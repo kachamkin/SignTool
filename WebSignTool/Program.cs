@@ -1,7 +1,6 @@
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
+using StackExchange.Redis;
 using WebSignTool;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using IRedis = WebSignTool.IRedis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,7 +9,21 @@ builder.Services.AddControllersWithViews(options =>
 {
     options.Filters.Add(typeof(WebSignTool.LogFilter));
 });
-Global.AddTelegram(builder);
+
+IConfigurationSection Options = builder.Configuration.GetSection("Options");
+string dataBaseType = Options.GetValue<string>("DataBaseType");
+
+//if (dataBaseType == "Redis")
+//    builder.Services.AddStackExchangeRedisCache(options =>
+//    {
+//        options.Configuration = builder.Configuration.GetConnectionString("Redis");
+//        options.InstanceName = "Redis";
+//    });
+
+Redis redis = new(builder.Configuration);
+builder.Services.AddSingleton<IRedis>(redis);
+
+Global.AddTelegram(builder, redis);
 
 var app = builder.Build();
 
