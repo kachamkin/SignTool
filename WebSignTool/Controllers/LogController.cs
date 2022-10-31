@@ -11,12 +11,16 @@ namespace WebSignTool.Controllers
         private readonly Microsoft.Extensions.Hosting.IHostEnvironment env;
         private readonly IConfiguration Configuration;
         private readonly IRedis redis;
+        private readonly IMongo mongo;
+        private readonly ISql sql;
 
-        public LogController(Microsoft.Extensions.Hosting.IHostEnvironment _env, IConfiguration _Configuration, IRedis _redis)
+        public LogController(Microsoft.Extensions.Hosting.IHostEnvironment _env, IConfiguration _Configuration, IRedis _redis, IMongo _mongo, ISql _sql)
         {
             env = _env;
             Configuration = _Configuration;
             redis = _redis;
+            mongo = _mongo;
+            sql = _sql;
         }
 
         public async Task<IActionResult> LogAsync()
@@ -28,7 +32,7 @@ namespace WebSignTool.Controllers
 
                 if (dataBaseType == "SQL") 
                 {
-                    foreach (LogEntry entry in new LogContext(Configuration).GetRecords())
+                    foreach (LogEntry entry in sql.GetRecords())
                         ret += entry;
 
                     return Content(ret);
@@ -37,6 +41,13 @@ namespace WebSignTool.Controllers
                 {
                     foreach (DataRow entry in await redis.GetRecords())
                         ret += entry["value"] + "\r\n";
+
+                    return Content(ret);
+                }
+                else if (dataBaseType == "Mongo")
+                {
+                    foreach (LogEntry entry in await mongo.GetRecords())
+                        ret += entry;
 
                     return Content(ret);
                 }

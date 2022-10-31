@@ -1,10 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace WebSignTool
 {
     public class LogEntry
     {
+        [BsonId]
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string MongoId { get; set; } = "";
         public int Id { get; set; }
         public DateTime Date { get; set; }
         public string? Host { get; set; }
@@ -23,17 +28,25 @@ namespace WebSignTool
         { }
     }
 
-    public class LogContext : DbContext
+    public interface ISql
+    {
+        public void AddRecord(DateTime _Date, string? _Host, string? _Path);
+        public IEnumerable<LogEntry> GetRecords();
+    }
+
+    public class LogContext : DbContext, ISql
     {
         private readonly IConfiguration Configuration;
         public LogContext(IConfiguration configuration)
         {
             Configuration = configuration;
-            Database.EnsureCreated();
+            if (Configuration.GetSection("Options").GetValue<string>("DataBaseType") == "SQL")
+                Database.EnsureCreated();
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(Configuration.GetConnectionString("LocalDB"));
+            if (Configuration.GetSection("Options").GetValue<string>("DataBaseType") == "SQL")
+                optionsBuilder.UseSqlServer(Configuration.GetConnectionString("LocalDB"));
         }
         public DbSet<LogEntry> LogEntries => Set<LogEntry>();
 

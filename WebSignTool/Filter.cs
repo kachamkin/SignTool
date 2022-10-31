@@ -11,13 +11,17 @@ namespace WebSignTool
         private readonly IHostEnvironment env;
         private readonly ITelegram telegram;
         private readonly IRedis redis;
+        private readonly IMongo mongo;
+        private readonly ISql sql;
 
-        public LogFilter(IConfiguration _config, IHostEnvironment _env, ITelegram _telegram, IRedis _redis)
+        public LogFilter(IConfiguration _config, IHostEnvironment _env, ITelegram _telegram, IRedis _redis, IMongo _mongo, ISql _sql)
         {
             Configuration = _config;
             env = _env;
             telegram = _telegram;
             redis = _redis;
+            mongo = _mongo;
+            sql = _sql;
         }
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
@@ -34,10 +38,12 @@ namespace WebSignTool
 
                 if (dataBaseType == "SQL")
                 {
-                    new LogContext(Configuration).AddRecord(DateTime.Now, ip + GetHostName(ip), context.HttpContext.Request.Path);
+                    sql.AddRecord(DateTime.Now, ip + GetHostName(ip), context.HttpContext.Request.Path + ", client: " + context.HttpContext.Request.Headers["User-Agent"]);
                 }
                 else if (dataBaseType == "Redis")
                     await redis.AddRecord(DateTime.Now, ip + hostName, context.HttpContext.Request.Path + ", client: " + context.HttpContext.Request.Headers["User-Agent"]);
+                else if (dataBaseType == "Mongo")
+                    await mongo.AddRecord(DateTime.Now, ip + hostName, context.HttpContext.Request.Path + ", client: " + context.HttpContext.Request.Headers["User-Agent"]);
                 else
                 {
                     string LogName = Global.GetCertDir() + "\\" + "log.txt";

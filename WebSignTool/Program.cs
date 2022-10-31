@@ -10,18 +10,10 @@ builder.Services.AddControllersWithViews(options =>
     options.Filters.Add(typeof(WebSignTool.LogFilter));
 });
 
-IConfigurationSection Options = builder.Configuration.GetSection("Options");
-string dataBaseType = Options.GetValue<string>("DataBaseType");
-
-//if (dataBaseType == "Redis")
-//    builder.Services.AddStackExchangeRedisCache(options =>
-//    {
-//        options.Configuration = builder.Configuration.GetConnectionString("Redis");
-//        options.InstanceName = "Redis";
-//    });
-
 Redis redis = new(builder.Configuration);
 builder.Services.AddSingleton<IRedis>(redis);
+builder.Services.AddSingleton<IMongo>(new Mongo(builder.Configuration));
+builder.Services.AddSingleton<ISql>(new LogContext(builder.Configuration));
 
 Global.AddTelegram(builder, redis);
 

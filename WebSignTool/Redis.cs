@@ -17,13 +17,17 @@ namespace WebSignTool
     public class Redis : IRedis
     {
         private readonly IConfiguration configuration;
-        private readonly IConnectionMultiplexer cm;
-        private readonly IDatabase db;
+        private readonly IConnectionMultiplexer? cm;
+        private readonly IDatabase? db;
         public Redis(IConfiguration _config)
         {
             configuration = _config;
-            cm = Task<ConnectionMultiplexer>.Run(() => ConnectionMultiplexer.Connect(configuration.GetConnectionString("Redis"))).Result;
-            db = cm.GetDatabase();
+            if (configuration.GetSection("Options").GetValue<string>("DataBaseType") == "Redis")
+            {
+
+                cm = Task<ConnectionMultiplexer>.Run(() => ConnectionMultiplexer.Connect(configuration.GetConnectionString("Redis"))).Result;
+                db = cm.GetDatabase();
+            }
         }
 
         public async Task AddRecord(DateTime _Date, string? _Host, string? _Path)
@@ -56,7 +60,7 @@ namespace WebSignTool
 
         public string? GetRecord(string key)
         {
-            return db.StringGet(key);
+            return db?.StringGet(key);
         }
 
         public async Task<EnumerableRowCollection> GetRecords()

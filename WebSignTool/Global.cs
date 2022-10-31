@@ -53,13 +53,13 @@ namespace WebSignTool
             }
         }
 
-        public static void OnTelegramMessageReceived(string message, ITelegram telegram, IConfiguration config, IRedis redis)
+        public static void OnTelegramMessageReceived(string message, ITelegram telegram)
         {
             telegram.SendMessage("Your message is: " + message);
             try
             {
-                if (config.GetSection("Options").GetValue<string>("DataBaseType") == "Redis")
-                    redis.AddRecord("awaitid", telegram.UpdateId.ToString());
+                if (telegram.Configuration.GetSection("Options").GetValue<string>("DataBaseType") == "Redis")
+                    telegram.Redis.AddRecord("awaitid", telegram.UpdateId.ToString());
                 else
                 {
                     string certDir = Global.GetCertDir();

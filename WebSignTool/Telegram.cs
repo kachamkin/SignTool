@@ -66,7 +66,7 @@ namespace WebSignTool
         private readonly IRedis redis;
         public IRedis Redis { get { return redis; } }
 
-        public delegate void MessageReceived(string message, ITelegram telegram, IConfiguration conf, IRedis redis);
+        public delegate void MessageReceived(string message, ITelegram telegram);
         public event MessageReceived? OnMessageReceived;
 
         public Telegram(string _botToken, int _chatId, int _updateId, IConfiguration _config, IRedis _redis, uint _checkNewMessagesIntervalInSeconds = 1)
@@ -94,7 +94,7 @@ namespace WebSignTool
         {
             string message = await GetLastMessage();
             if (!string.IsNullOrEmpty(message))
-                OnMessageReceived?.Invoke(message, this, Configuration, redis);
+                OnMessageReceived?.Invoke(message, this);
         }
 
         public async void SendMessage(string message)
