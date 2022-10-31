@@ -10,8 +10,6 @@ namespace WebSignTool
         public Task AddRecord(string Key, string Value);
         public Task<EnumerableRowCollection> GetRecords();
         public string? GetRecord(string key);
-
-
     }
 
     public class Redis : IRedis

@@ -61,13 +61,6 @@ namespace WebSignTool
             LogEntries.UpdateRange(LogEntries);
             return LogEntries;
         }
-
-        public IEnumerable<LogEntry> GetRecords(DateTime from, DateTime to)
-        {
-            LogEntries.UpdateRange(LogEntries);
-            return LogEntries.Where(e => e.Date >= from && e.Date <= to);
-        }
-
     }
 
 }
