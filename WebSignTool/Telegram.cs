@@ -10,6 +10,8 @@ namespace WebSignTool
         public int UpdateId { get; }
         public IConfiguration Configuration { get; }
         public IRedis Redis { get; }
+        public IMongo Mongo { get; }
+        public ISql Sql { get; }
 
     }
 
@@ -65,14 +67,20 @@ namespace WebSignTool
         public IConfiguration Configuration { get { return configuration; } }
         private readonly IRedis redis;
         public IRedis Redis { get { return redis; } }
+        private readonly IMongo mongo;
+        public IMongo Mongo { get { return mongo; } }
+        private readonly ISql sql;
+        public ISql Sql { get { return sql; } }
 
         public delegate void MessageReceived(string message, ITelegram telegram);
         public event MessageReceived? OnMessageReceived;
 
-        public Telegram(string _botToken, int _chatId, int _updateId, IConfiguration _config, IRedis _redis, uint _checkNewMessagesIntervalInSeconds = 1)
+        public Telegram(string _botToken, int _chatId, int _updateId, IConfiguration _config, IRedis _redis, IMongo _mongo, ISql _sql, uint _checkNewMessagesIntervalInSeconds = 1)
         {
             configuration = _config;
             redis = _redis;
+            mongo = _mongo;
+            sql = _sql;
 
             botToken = _botToken;  
             chatId = _chatId;
@@ -100,13 +108,21 @@ namespace WebSignTool
         public async void SendMessage(string message)
         {
             using HttpClient hc = new();
-            await hc.GetStringAsync(
-                                "https://api.telegram.org/bot" +
-                                botToken +
-                                "/sendMessage?chat_id=" +
-                                chatId +
-                                "&text=" + message
-                             );
+
+            int length = 0;
+            for (int i = 0; length < message.Length; i++)
+            {
+                int diff = message.Length - length;
+                diff = diff > 4096 ? 4096 : diff;
+                await hc.GetStringAsync(
+                                    "https://api.telegram.org/bot" +
+                                    botToken +
+                                    "/sendMessage?chat_id=" +
+                                    chatId +
+                                    "&text=" + message.Substring(4096 * i, diff)
+                                    );
+                length += diff;
+            }
         }
 
         private async Task<string> GetLastMessage()

@@ -11,11 +11,13 @@ builder.Services.AddControllersWithViews(options =>
 });
 
 Redis redis = new(builder.Configuration);
+Mongo mongo = new(builder.Configuration);
+LogContext sql = new(builder.Configuration);
 builder.Services.AddSingleton<IRedis>(redis);
-builder.Services.AddSingleton<IMongo>(new Mongo(builder.Configuration));
-builder.Services.AddSingleton<ISql>(new LogContext(builder.Configuration));
+builder.Services.AddSingleton<IMongo>(mongo);
+builder.Services.AddSingleton<ISql>(sql);
 
-Global.AddTelegram(builder, redis);
+Global.AddTelegram(builder, redis, mongo, sql);
 
 var app = builder.Build();
 

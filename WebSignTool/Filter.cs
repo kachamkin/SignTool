@@ -8,16 +8,14 @@ namespace WebSignTool
     public class LogFilter : IAsyncActionFilter
     {
         private readonly IConfiguration Configuration;
-        private readonly IHostEnvironment env;
         private readonly ITelegram telegram;
         private readonly IRedis redis;
         private readonly IMongo mongo;
         private readonly ISql sql;
 
-        public LogFilter(IConfiguration _config, IHostEnvironment _env, ITelegram _telegram, IRedis _redis, IMongo _mongo, ISql _sql)
+        public LogFilter(IConfiguration _config, ITelegram _telegram, IRedis _redis, IMongo _mongo, ISql _sql)
         {
             Configuration = _config;
-            env = _env;
             telegram = _telegram;
             redis = _redis;
             mongo = _mongo;

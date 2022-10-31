@@ -36,7 +36,7 @@ namespace WebSignTool
             IServer iServer = cm.GetServer(server);
             if (await iServer.DatabaseSizeAsync() >= configuration.GetSection("Options").GetValue<long>("MaxLogSizeRedis"))
                 foreach (RedisKey key in iServer.Keys(pattern: "*"))
-                    if (key != "awaitid")
+                    if (key != "updateid")
                         await db.StringGetDeleteAsync(key);
 
             await db.StringSetAsync(DateTime.UtcNow.Ticks.ToString(), _Date + ": host " + _Host + ", path: " + _Path);
@@ -50,7 +50,7 @@ namespace WebSignTool
             IServer iServer = cm.GetServer(server);
             if (await iServer.DatabaseSizeAsync() >= configuration.GetSection("Options").GetValue<long>("MaxLogSizeRedis"))
                 foreach (RedisKey key in iServer.Keys(pattern: "*"))
-                    if (key != "awaitid")
+                    if (key != "updateid")
                         await db.StringGetDeleteAsync(key);
 
             await db.StringSetAsync(Key, Value);
@@ -72,7 +72,7 @@ namespace WebSignTool
 
             foreach (RedisKey key in cm.GetServer(server).Keys(pattern: "*"))
             {
-                if (key != "awaitid")
+                if (key != "updateid")
                 {
                     DataRow row = dt.Rows.Add();
                     row["key"] = key;

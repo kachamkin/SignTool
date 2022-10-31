@@ -27,32 +27,7 @@ namespace WebSignTool.Controllers
         {
             try
             {
-                string dataBaseType = Configuration.GetSection("Options").GetValue<string>("DataBaseType");
-                string ret = "";
-
-                if (dataBaseType == "SQL") 
-                {
-                    foreach (LogEntry entry in sql.GetRecords())
-                        ret += entry;
-
-                    return Content(ret);
-                }
-                else if (dataBaseType == "Redis")
-                {
-                    foreach (DataRow entry in await redis.GetRecords())
-                        ret += entry["value"] + "\r\n";
-
-                    return Content(ret);
-                }
-                else if (dataBaseType == "Mongo")
-                {
-                    foreach (LogEntry entry in await mongo.GetRecords())
-                        ret += entry;
-
-                    return Content(ret);
-                }
-                else
-                    return Content(await System.IO.File.ReadAllTextAsync(Global.GetCertDir() + "\\log.txt"));
+                return Content(await Global.GetLog(Configuration, redis, mongo, sql));
             }
             catch (Exception ex)
             {

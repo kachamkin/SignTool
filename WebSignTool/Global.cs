@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.Extensions.Configuration;
+using System.Data;
 using System.IO.Compression;
 
 namespace WebSignTool
@@ -53,24 +55,26 @@ namespace WebSignTool
             }
         }
 
-        public static void OnTelegramMessageReceived(string message, ITelegram telegram)
+        public static async void OnTelegramMessageReceived(string message, ITelegram telegram)
         {
-            telegram.SendMessage("Your message is: " + message);
+            if (message.ToLower() == "log")
+                telegram.SendMessage(await Global.GetLog(telegram.Configuration, telegram.Redis, telegram.Mongo, telegram.Sql));
+
             try
             {
                 if (telegram.Configuration.GetSection("Options").GetValue<string>("DataBaseType") == "Redis")
-                    telegram.Redis.AddRecord("awaitid", telegram.UpdateId.ToString());
+                    await telegram.Redis.AddRecord("updateid", telegram.UpdateId.ToString());
                 else
                 {
                     string certDir = Global.GetCertDir();
                     System.IO.File.Open(certDir + "\\updateid.txt", FileMode.OpenOrCreate).Close();
-                    System.IO.File.WriteAllTextAsync(certDir + "\\updateid.txt", telegram.UpdateId.ToString());
+                    await System.IO.File.WriteAllTextAsync(certDir + "\\updateid.txt", telegram.UpdateId.ToString());
                 }
             }
             catch { }
         }
 
-        public static void AddTelegram(WebApplicationBuilder builder, IRedis redis)
+        public static void AddTelegram(WebApplicationBuilder builder, IRedis redis, IMongo mongo, ISql sql)
         {
             IConfigurationSection options = builder.Configuration.GetSection("Options");
 
@@ -92,10 +96,37 @@ namespace WebSignTool
             }
             catch { }
 
-            Telegram telegram = new(options.GetValue<string>("TelegramToken"), options.GetValue<int>("TelegramId"), updateId, builder.Configuration, redis);
+            Telegram telegram = new(options.GetValue<string>("TelegramToken"), options.GetValue<int>("TelegramId"), updateId, builder.Configuration, redis, mongo, sql);
             telegram.OnMessageReceived += Global.OnTelegramMessageReceived;
 
             builder.Services.AddSingleton<ITelegram>(telegram);
+        }
+
+        public static async Task<string> GetLog(IConfiguration Configuration, IRedis redis, IMongo mongo, ISql sql)
+        {
+            string dataBaseType = Configuration.GetSection("Options").GetValue<string>("DataBaseType");
+            string ret = "";
+
+            if (dataBaseType == "SQL")
+            {
+                foreach (LogEntry entry in sql.GetRecords())
+                    ret += entry;
+                return ret;
+            }
+            else if (dataBaseType == "Redis")
+            {
+                foreach (DataRow entry in await redis.GetRecords())
+                    ret += entry["value"] + "\r\n";
+                return ret;
+            }
+            else if (dataBaseType == "Mongo")
+            {
+                foreach (LogEntry entry in await mongo.GetRecords())
+                    ret += entry;
+                return ret;
+            }
+            else
+                return await System.IO.File.ReadAllTextAsync(Global.GetCertDir() + "\\log.txt");
         }
     }
 }
