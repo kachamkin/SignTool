@@ -62,15 +62,15 @@ namespace WebSignTool
         private readonly uint checkNewMessagesIntervalInSeconds;
         private int updateId;
         private readonly System.Timers.Timer timer;
-        public int UpdateId { get { return updateId; } }
+        public int UpdateId => updateId;
         private readonly IConfiguration configuration;
-        public IConfiguration Configuration { get { return configuration; } }
+        public IConfiguration Configuration => configuration;
         private readonly IRedis redis;
-        public IRedis Redis { get { return redis; } }
+        public IRedis Redis => redis;
         private readonly IMongo mongo;
-        public IMongo Mongo { get { return mongo; } }
+        public IMongo Mongo => mongo;
         private readonly ISql sql;
-        public ISql Sql { get { return sql; } }
+        public ISql Sql => sql;
 
         public delegate void MessageReceived(string message, ITelegram telegram);
         public event MessageReceived? OnMessageReceived;
@@ -88,7 +88,12 @@ namespace WebSignTool
             checkNewMessagesIntervalInSeconds = _checkNewMessagesIntervalInSeconds;
 
             timer = new(1000 * checkNewMessagesIntervalInSeconds);
-            timer.Elapsed += TimerElapsed;
+            timer.Elapsed += async (sender, ea) =>
+            {
+                string message = await GetLastMessage();
+                if (!string.IsNullOrEmpty(message))
+                    OnMessageReceived?.Invoke(message, this);
+            };
             timer.Start();
         }
 
@@ -96,13 +101,6 @@ namespace WebSignTool
         {
             timer.Stop();
             timer.Dispose();
-        }
-
-        private async void TimerElapsed(object? sender, System.Timers.ElapsedEventArgs e)
-        {
-            string message = await GetLastMessage();
-            if (!string.IsNullOrEmpty(message))
-                OnMessageReceived?.Invoke(message, this);
         }
 
         public async void SendMessage(string message)

@@ -21,10 +21,8 @@ namespace WebSignTool
                 db = new MongoClient(MongoClientSettings.FromConnectionString(Configuration.GetConnectionString("Mongo"))).GetDatabase(Configuration.GetSection("Options").GetValue<string>("MongoDatabase"));
         }
 
-        public async Task AddRecord(DateTime _Date, string? _Host, string? _Path)
-        {
+        public async Task AddRecord(DateTime _Date, string? _Host, string? _Path) =>
             await db.GetCollection<LogEntry>("LogEntries").InsertOneAsync(new LogEntry(_Date, _Host, _Path));
-        }
 
         public async Task<IEnumerable<LogEntry>> GetRecords()
         {

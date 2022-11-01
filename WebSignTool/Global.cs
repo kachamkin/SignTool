@@ -57,11 +57,11 @@ namespace WebSignTool
 
         public static async void OnTelegramMessageReceived(string message, ITelegram telegram)
         {
-            if (message.ToLower() == "log")
-                telegram.SendMessage(await Global.GetLog(telegram.Configuration, telegram.Redis, telegram.Mongo, telegram.Sql));
-
             try
             {
+                if (message.ToLower() == "log")
+                    telegram.SendMessage(await Global.GetLog(telegram.Configuration, telegram.Redis, telegram.Mongo, telegram.Sql));
+            
                 if (telegram.Configuration.GetSection("Options").GetValue<string>("DataBaseType") == "Redis")
                     await telegram.Redis.AddRecord("updateid", telegram.UpdateId.ToString());
                 else
@@ -74,7 +74,7 @@ namespace WebSignTool
             catch { }
         }
 
-        public static void AddTelegram(WebApplicationBuilder builder, IRedis redis, IMongo mongo, ISql sql)
+        public static void AddTelegramAndRabbit(WebApplicationBuilder builder, IRedis redis, IMongo mongo, ISql sql)
         {
             IConfigurationSection options = builder.Configuration.GetSection("Options");
 
@@ -100,6 +100,13 @@ namespace WebSignTool
             telegram.OnMessageReceived += Global.OnTelegramMessageReceived;
 
             builder.Services.AddSingleton<ITelegram>(telegram);
+
+            Rabbit rabbit = new(builder.Configuration, telegram);
+            rabbit.OnMessageReceived += OnRabbitMessageReceived;
+            rabbit.StartAsync(new(false));
+
+            builder.Services.AddSingleton<IRabbit>(rabbit);
+
         }
 
         public static async Task<string> GetLog(IConfiguration Configuration, IRedis redis, IMongo mongo, ISql sql)
@@ -127,6 +134,11 @@ namespace WebSignTool
             }
             else
                 return await System.IO.File.ReadAllTextAsync(Global.GetCertDir() + "\\log.txt");
+        }
+
+        public static void OnRabbitMessageReceived(string message, ITelegram telegram)
+        {
+            telegram.SendMessage("Rabbit message received:\r\n\r\n" + message);
         }
     }
 }

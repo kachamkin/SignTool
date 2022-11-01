@@ -13,7 +13,7 @@ namespace WebSignTool
         private readonly IMongo mongo;
         private readonly ISql sql;
 
-        public LogFilter(IConfiguration _config, ITelegram _telegram, IRedis _redis, IMongo _mongo, ISql _sql)
+        public LogFilter(IConfiguration _config, ITelegram _telegram, IRedis _redis, IMongo _mongo, ISql _sql, IRabbit _rabbit)
         {
             Configuration = _config;
             telegram = _telegram;
@@ -29,11 +29,9 @@ namespace WebSignTool
             {
 
                 string hostName = GetHostName(ip);
-
                 telegram.SendMessage("Host: " + ip + hostName + "\nPath: " + context.HttpContext.Request.Path + "\nClient: " + context.HttpContext.Request.Headers["User-Agent"]);
 
                 string dataBaseType = Configuration.GetSection("Options").GetValue<string>("DataBaseType");
-
                 if (dataBaseType == "SQL")
                 {
                     sql.AddRecord(DateTime.Now, ip + GetHostName(ip), context.HttpContext.Request.Path + ", client: " + context.HttpContext.Request.Headers["User-Agent"]);
@@ -70,7 +68,6 @@ namespace WebSignTool
         public string GetHostName(IPAddress? ip)
         {
             string HostName;
-
             try
             {
                 HostName = ip == null ? "" : " (" + Dns.GetHostEntry(ip).HostName + ")";
@@ -79,7 +76,6 @@ namespace WebSignTool
             {
                 HostName = " (" + ex.Message + ")";
             }
-
             return HostName;
         }
     }
