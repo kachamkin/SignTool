@@ -18,7 +18,9 @@ builder.Services.AddSingleton<IRedis>(redis);
 builder.Services.AddSingleton<IMongo>(mongo);
 builder.Services.AddSingleton<ISql>(sql);
 
-Global.AddTelegramAndRabbit(builder, redis, mongo, sql);
+Global.AddMessaging(builder, redis, mongo, sql);
+
+builder.Services.AddSignalR();
 
 var app = builder.Build();
 
@@ -92,5 +94,7 @@ app.MapControllerRoute(
 app.MapControllerRoute(
     name: "log",
     pattern: "{controller=LogController}/{action=Log}/{id?}");
+
+app.MapHub<ChatHub>("/chat");
 
 app.Run(); 

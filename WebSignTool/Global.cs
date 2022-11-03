@@ -74,7 +74,7 @@ namespace WebSignTool
             catch { }
         }
 
-        public static void AddTelegramAndRabbit(WebApplicationBuilder builder, IRedis redis, IMongo mongo, ISql sql)
+        public static void AddMessaging(WebApplicationBuilder builder, IRedis redis, IMongo mongo, ISql sql)
         {
             IConfigurationSection options = builder.Configuration.GetSection("Options");
 
@@ -98,15 +98,16 @@ namespace WebSignTool
 
             Telegram telegram = new(options.GetValue<string>("TelegramToken"), options.GetValue<int>("TelegramId"), updateId, builder.Configuration, redis, mongo, sql);
             telegram.OnMessageReceived += Global.OnTelegramMessageReceived;
-
             builder.Services.AddSingleton<ITelegram>(telegram);
 
             Rabbit rabbit = new(builder.Configuration, telegram);
             rabbit.OnMessageReceived += OnRabbitMessageReceived;
             rabbit.StartAsync(new(false));
-
             builder.Services.AddSingleton<IRabbit>(rabbit);
 
+            ChatHub chat = new(builder.Configuration, telegram);
+            chat.OnMessageReceived += OnSignalRMessageReceived;
+            builder.Services.AddSingleton<IWebSocket>(chat);
         }
 
         public static async Task<string> GetLog(IConfiguration Configuration, IRedis redis, IMongo mongo, ISql sql)
@@ -140,5 +141,11 @@ namespace WebSignTool
         {
             telegram.SendMessage("Rabbit message received:\r\n\r\n" + message);
         }
+
+        public static void OnSignalRMessageReceived(string message, ITelegram telegram)
+        {
+            telegram.SendMessage("WebSocket message received:\r\n\r\n" + message);
+        }
+
     }
 }

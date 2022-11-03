@@ -10,11 +10,13 @@ namespace WebSignTool.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IRabbit rabbit;
+        private readonly IWebSocket chat; 
 
-        public HomeController(ILogger<HomeController> logger, IRabbit _rabbit)
+        public HomeController(ILogger<HomeController> logger, IRabbit _rabbit, IWebSocket _chat)
         {
             _logger = logger;
             rabbit = _rabbit;
+            chat = _chat;
         }
 
         public IActionResult Index()
@@ -25,6 +27,7 @@ namespace WebSignTool.Controllers
                 foreach (var h in HttpContext.Request.Headers)
                     ret += h.Key + ": " + h.Value + "\r\n\r\n";
                 rabbit.SendMessage(ret);
+                chat.SendMessage(ret);
             }
             catch { };
 
